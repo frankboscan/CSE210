@@ -1,0 +1,1395 @@
+using System;
+
+class Program{
+	static void Main(string[] args){
+		Reference reference = new Reference("1 Nefi", 3, 7, 8);
+		string verses = "I dogodi se da ja, Nefi, rekoh ocu svome: Poći ću i učiniti ono što Gospod zapovjedi, jer znadem da Gospod ne daje zapovijedi djeci ljudskoj, osim ako ne pripravi put za njih da mogu izvršiti ono što im zapovjedi. I dogodi se, kad otac moj ču te riječi, bijaše silno radostan, jer spozna da Gospod mene blagoslovi.";
+		Scripture scripture = new Scripture(reference, verses);
+		string quit = "";
+		Console.Clear();		
+}
+/*
+ * Class: Reference
+ *
+ * Attributes:
+ *  _book : string
+ *  _chapter : int
+ *  _verse : int
+ *  _endVerse : int
+ *
+ * Methods:
+ *  Reference(book : string, chapter : int, verse : int)
+ *  Reference(book : string, chapter : int, startVerse : int, endVerse : int)
+ *  
+ *  GetDisplayText() : string
+ */
+
+public class Reference{
+	private string _book = "";
+	private int _chapter, _verse, _endVerse = 0;
+
+	public Reference(string book, int chapter, int verse){
+		_book = book;
+		_chapter = chapter;
+		_verse = verse;
+	}
+
+	public Reference(string book, int chapter, int startVerse, int endVerse){
+		_book = book;
+		_chapter = chapter;
+		_verse = startVerse;
+		_endVerse = endVerse;
+	}
+
+	public string GetDisplayText(){
+	       if (_endVerse == 0) 
+		       return $"{_book} {_chapter}:{_verse}";
+	       return $"{_book} {_chapter}:{_verse}-{_endVerse}";
+	}
+}
+/*
+ * Class: Scripture
+ *
+ * Attributes:
+ *  _reference : Reference
+ *  _words : List<Word>
+ *
+ * Methods:
+ *  Scripture(reference : Reference, text : string)
+ *  HideRandomWords(numberToHide : int) : void
+ *  GetDisplayText() : string
+ *  IsCompletelyHidden() : bool
+ */
+
+public class Scripture{
+	private Reference _reference;
+	private List<Word> _words = new List<Word>();
+
+	public Scripture(Reference reference, string text){
+		_reference = reference;
+		foreach (string word in text.Split()) _words.Add(new Word(word));
+	}
+
+	public void HideRandomWords(int numberToHide){
+		Random random = new Random();
+		int[] ranksToHide = new int[numberToHide];
+		Array.Fill(ranksToHide, -1);
+		for (int i = 0; i < numberToHide; i++){
+			do {
+				ranksToHide[i] = random.Next(0, _words.Count);
+			} while (Array.IndexOf(ranksToHide, ranksToHide[i]) != -1);
+			_words.Hide(ranksToHide[i]);
+		}
+	}
+
+	public string GetDisplayText(){
+		string result = $"_reference.GetDisplayText()\n";
+		result.Join(" ", _words.ConvertAll(word => word.GetDisplayText()));
+		return $"{result}."
+	}
+
+	public bool IsCompletelyHidden(){
+		for (int i = 0; i < _words.Count; i++)
+			if !_words(i).IsHidden() return false;
+		return true;
+	}
+}
+/*
+ * Class: Word
+ *
+ * Attributes:
+ *  _text : string
+ *  _isHidden : bool
+ *
+ * Methods:
+ *  Word(text : string)
+ *
+ *  Hide() : void
+ *  Show() : void
+ *  IsHidden() : bool
+ *  GetDisplayText() : string
+ */
+
+public class Word{
+	private string _text = "";
+	private bool _isHidden = false;
+
+	public Word(string text){
+		_text = text;
+	}
+
+	public void Hide(){
+		_isHidden = true;
+	}
+
+	public void Show(){
+		_isHidden = false;
+	}
+
+	public void IsHidden() => _isHidden;
+
+	public string GetDisplayText(){
+		if IsHidden{
+			string blankText = _text;
+			for (int i = 0; i < _text.Length; i++)
+				blankText[i] = "_";
+			return blankText;
+		} else
+			return _text;
+	}
+}
+using System;
+
+class Program{
+	static void Main(string[] args){
+		Reference reference = new Reference("1 Nefi", 3, 7, 8);
+		string verses = "I dogodi se da ja, Nefi, rekoh ocu svome: Poći ću i učiniti ono što Gospod zapovjedi, jer znadem da Gospod ne daje zapovijedi djeci ljudskoj, osim ako ne pripravi put za njih da mogu izvršiti ono što im zapovjedi. I dogodi se, kad otac moj ču te riječi, bijaše silno radostan, jer spozna da Gospod mene blagoslovi.";
+		Scripture scripture = new Scripture(reference, verses);
+		string quit = "";
+		Console.Clear();		
+}
+/*
+ * Class: Reference
+ *
+ * Attributes:
+ *  _book : string
+ *  _chapter : int
+ *  _verse : int
+ *  _endVerse : int
+ *
+ * Methods:
+ *  Reference(book : string, chapter : int, verse : int)
+ *  Reference(book : string, chapter : int, startVerse : int, endVerse : int)
+ *  
+ *  GetDisplayText() : string
+ */
+
+public class Reference{
+	private string _book = "";
+	private int _chapter, _verse, _endVerse = 0;
+
+	public Reference(string book, int chapter, int verse){
+		_book = book;
+		_chapter = chapter;
+		_verse = verse;
+	}
+
+	public Reference(string book, int chapter, int startVerse, int endVerse){
+		_book = book;
+		_chapter = chapter;
+		_verse = startVerse;
+		_endVerse = endVerse;
+	}
+
+	public string GetDisplayText(){
+	       if (_endVerse == 0) 
+		       return $"{_book} {_chapter}:{_verse}";
+	       return $"{_book} {_chapter}:{_verse}-{_endVerse}";
+	}
+}
+/*
+ * Class: Scripture
+ *
+ * Attributes:
+ *  _reference : Reference
+ *  _words : List<Word>
+ *
+ * Methods:
+ *  Scripture(reference : Reference, text : string)
+ *  HideRandomWords(numberToHide : int) : void
+ *  GetDisplayText() : string
+ *  IsCompletelyHidden() : bool
+ */
+
+public class Scripture{
+	private Reference _reference;
+	private List<Word> _words = new List<Word>();
+
+	public Scripture(Reference reference, string text){
+		_reference = reference;
+		foreach (string word in text.Split()) _words.Add(new Word(word));
+	}
+
+	public void HideRandomWords(int numberToHide){
+		Random random = new Random();
+		int[] ranksToHide = new int[numberToHide];
+		Array.Fill(ranksToHide, -1);
+		for (int i = 0; i < numberToHide; i++){
+			do {
+				ranksToHide[i] = random.Next(0, _words.Count);
+			} while (Array.IndexOf(ranksToHide, ranksToHide[i]) != -1);
+			_words.Hide(ranksToHide[i]);
+		}
+	}
+
+	public string GetDisplayText(){
+		string result = $"_reference.GetDisplayText()\n";
+		result.Join(" ", _words.ConvertAll(word => word.GetDisplayText()));
+		return $"{result}."
+	}
+
+	public bool IsCompletelyHidden(){
+		for (int i = 0; i < _words.Count; i++)
+			if !_words(i).IsHidden() return false;
+		return true;
+	}
+}
+/*
+ * Class: Word
+ *
+ * Attributes:
+ *  _text : string
+ *  _isHidden : bool
+ *
+ * Methods:
+ *  Word(text : string)
+ *
+ *  Hide() : void
+ *  Show() : void
+ *  IsHidden() : bool
+ *  GetDisplayText() : string
+ */
+
+public class Word{
+	private string _text = "";
+	private bool _isHidden = false;
+
+	public Word(string text){
+		_text = text;
+	}
+
+	public void Hide(){
+		_isHidden = true;
+	}
+
+	public void Show(){
+		_isHidden = false;
+	}
+
+	public void IsHidden() => _isHidden;
+
+	public string GetDisplayText(){
+		if _IsHidden{
+			string blankText = _text;
+			for (int i = 0; i < _text.Length; i++)
+				blankText[i] = "_";
+			return blankText;
+		} else
+			return _text;
+	}
+}
+using System;
+
+class Program{
+	static void Main(string[] args){
+		Reference reference = new Reference("1 Nefi", 3, 7, 8);
+		string verses = "I dogodi se da ja, Nefi, rekoh ocu svome: Poći ću i učiniti ono što Gospod zapovjedi, jer znadem da Gospod ne daje zapovijedi djeci ljudskoj, osim ako ne pripravi put za njih da mogu izvršiti ono što im zapovjedi. I dogodi se, kad otac moj ču te riječi, bijaše silno radostan, jer spozna da Gospod mene blagoslovi.";
+		Scripture scripture = new Scripture(reference, verses);
+		string quit = "";
+		Console.Clear();		
+}
+/*
+ * Class: Reference
+ *
+ * Attributes:
+ *  _book : string
+ *  _chapter : int
+ *  _verse : int
+ *  _endVerse : int
+ *
+ * Methods:
+ *  Reference(book : string, chapter : int, verse : int)
+ *  Reference(book : string, chapter : int, startVerse : int, endVerse : int)
+ *  
+ *  GetDisplayText() : string
+ */
+
+public class Reference{
+	private string _book = "";
+	private int _chapter, _verse, _endVerse = 0;
+
+	public Reference(string book, int chapter, int verse){
+		_book = book;
+		_chapter = chapter;
+		_verse = verse;
+	}
+
+	public Reference(string book, int chapter, int startVerse, int endVerse){
+		_book = book;
+		_chapter = chapter;
+		_verse = startVerse;
+		_endVerse = endVerse;
+	}
+
+	public string GetDisplayText(){
+	       if (_endVerse == 0) 
+		       return $"{_book} {_chapter}:{_verse}";
+	       return $"{_book} {_chapter}:{_verse}-{_endVerse}";
+	}
+}
+/*
+ * Class: Scripture
+ *
+ * Attributes:
+ *  _reference : Reference
+ *  _words : List<Word>
+ *
+ * Methods:
+ *  Scripture(reference : Reference, text : string)
+ *  HideRandomWords(numberToHide : int) : void
+ *  GetDisplayText() : string
+ *  IsCompletelyHidden() : bool
+ */
+
+public class Scripture{
+	private Reference _reference;
+	private List<Word> _words = new List<Word>();
+
+	public Scripture(Reference reference, string text){
+		_reference = reference;
+		foreach (string word in text.Split()) _words.Add(new Word(word));
+	}
+
+	public void HideRandomWords(int numberToHide){
+		Random random = new Random();
+		int[] ranksToHide = new int[numberToHide];
+		Array.Fill(ranksToHide, -1);
+		for (int i = 0; i < numberToHide; i++){
+			do {
+				ranksToHide[i] = random.Next(0, _words.Count);
+			} while (Array.IndexOf(ranksToHide, ranksToHide[i]) != -1);
+			_words.Hide(ranksToHide[i]);
+		}
+	}
+
+	public string GetDisplayText(){
+		string result = $"_reference.GetDisplayText()\n";
+		result.Join(" ", _words.ConvertAll(word => word.GetDisplayText()));
+		return $"{result}."
+	}
+
+	public bool IsCompletelyHidden(){
+		for (int i = 0; i < _words.Count; i++)
+			if !_words(i).IsHidden() return false;
+		return true;
+	}
+}
+/*
+ * Class: Word
+ *
+ * Attributes:
+ *  _text : string
+ *  _isHidden : bool
+ *
+ * Methods:
+ *  Word(text : string)
+ *
+ *  Hide() : void
+ *  Show() : void
+ *  IsHidden() : bool
+ *  GetDisplayText() : string
+ */
+
+public class Word{
+	private string _text = "";
+	private bool _isHidden = false;
+
+	public Word(string text){
+		_text = text;
+	}
+
+	public void Hide(){
+		_isHidden = true;
+	}
+
+	public void Show(){
+		_isHidden = false;
+	}
+
+	public void IsHidden() => _isHidden;
+
+	public string GetDisplayText(){
+		if (_IsHidden){
+			string blankText = _text;
+			for (int i = 0; i < _text.Length; i++)
+				blankText[i] = "_";
+			return blankText;
+		} else
+			return _text;
+	}
+}
+using System;
+
+class Program{
+	static void Main(string[] args){
+		Reference reference = new Reference("1 Nefi", 3, 7, 8);
+		string verses = "I dogodi se da ja, Nefi, rekoh ocu svome: Poći ću i učiniti ono što Gospod zapovjedi, jer znadem da Gospod ne daje zapovijedi djeci ljudskoj, osim ako ne pripravi put za njih da mogu izvršiti ono što im zapovjedi. I dogodi se, kad otac moj ču te riječi, bijaše silno radostan, jer spozna da Gospod mene blagoslovi.";
+		Scripture scripture = new Scripture(reference, verses);
+		string quit = "";
+		Console.Clear();		
+	}
+}
+/*
+ * Class: Reference
+ *
+ * Attributes:
+ *  _book : string
+ *  _chapter : int
+ *  _verse : int
+ *  _endVerse : int
+ *
+ * Methods:
+ *  Reference(book : string, chapter : int, verse : int)
+ *  Reference(book : string, chapter : int, startVerse : int, endVerse : int)
+ *  
+ *  GetDisplayText() : string
+ */
+
+public class Reference{
+	private string _book = "";
+	private int _chapter, _verse, _endVerse = 0;
+
+	public Reference(string book, int chapter, int verse){
+		_book = book;
+		_chapter = chapter;
+		_verse = verse;
+	}
+
+	public Reference(string book, int chapter, int startVerse, int endVerse){
+		_book = book;
+		_chapter = chapter;
+		_verse = startVerse;
+		_endVerse = endVerse;
+	}
+
+	public string GetDisplayText(){
+	       if (_endVerse == 0) 
+		       return $"{_book} {_chapter}:{_verse}";
+	       return $"{_book} {_chapter}:{_verse}-{_endVerse}";
+	}
+}
+/*
+ * Class: Scripture
+ *
+ * Attributes:
+ *  _reference : Reference
+ *  _words : List<Word>
+ *
+ * Methods:
+ *  Scripture(reference : Reference, text : string)
+ *  HideRandomWords(numberToHide : int) : void
+ *  GetDisplayText() : string
+ *  IsCompletelyHidden() : bool
+ */
+
+public class Scripture{
+	private Reference _reference;
+	private List<Word> _words = new List<Word>();
+
+	public Scripture(Reference reference, string text){
+		_reference = reference;
+		foreach (string word in text.Split()) _words.Add(new Word(word));
+	}
+
+	public void HideRandomWords(int numberToHide){
+		Random random = new Random();
+		int[] ranksToHide = new int[numberToHide];
+		Array.Fill(ranksToHide, -1);
+		for (int i = 0; i < numberToHide; i++){
+			do {
+				ranksToHide[i] = random.Next(0, _words.Count);
+			} while (Array.IndexOf(ranksToHide, ranksToHide[i]) != -1);
+			_words.Hide(ranksToHide[i]);
+		}
+	}
+
+	public string GetDisplayText(){
+		string result = $"_reference.GetDisplayText()\n";
+		result.Join(" ", _words.ConvertAll(word => word.GetDisplayText()));
+		return $"{result}."
+	}
+
+	public bool IsCompletelyHidden(){
+		for (int i = 0; i < _words.Count; i++)
+			if !_words(i).IsHidden() return false;
+		return true;
+	}
+}
+/*
+ * Class: Word
+ *
+ * Attributes:
+ *  _text : string
+ *  _isHidden : bool
+ *
+ * Methods:
+ *  Word(text : string)
+ *
+ *  Hide() : void
+ *  Show() : void
+ *  IsHidden() : bool
+ *  GetDisplayText() : string
+ */
+
+public class Word{
+	private string _text = "";
+	private bool _isHidden = false;
+
+	public Word(string text){
+		_text = text;
+	}
+
+	public void Hide(){
+		_isHidden = true;
+	}
+
+	public void Show(){
+		_isHidden = false;
+	}
+
+	public void IsHidden() => _isHidden;
+
+	public string GetDisplayText(){
+		if (_IsHidden){
+			string blankText = _text;
+			for (int i = 0; i < _text.Length; i++)
+				blankText[i] = "_";
+			return blankText;
+		} else
+			return _text;
+	}
+}
+using System;
+
+class Program{
+	static void Main(string[] args){
+		Reference reference = new Reference("1 Nefi", 3, 7, 8);
+		string verses = "I dogodi se da ja, Nefi, rekoh ocu svome: Poći ću i učiniti ono što Gospod zapovjedi, jer znadem da Gospod ne daje zapovijedi djeci ljudskoj, osim ako ne pripravi put za njih da mogu izvršiti ono što im zapovjedi. I dogodi se, kad otac moj ču te riječi, bijaše silno radostan, jer spozna da Gospod mene blagoslovi.";
+		Scripture scripture = new Scripture(reference, verses);
+		string quit = "";
+		Console.Clear();		
+	}
+}
+/*
+ * Class: Reference
+ *
+ * Attributes:
+ *  _book : string
+ *  _chapter : int
+ *  _verse : int
+ *  _endVerse : int
+ *
+ * Methods:
+ *  Reference(book : string, chapter : int, verse : int)
+ *  Reference(book : string, chapter : int, startVerse : int, endVerse : int)
+ *  
+ *  GetDisplayText() : string
+ */
+
+public class Reference{
+	private string _book = "";
+	private int _chapter, _verse, _endVerse = 0;
+
+	public Reference(string book, int chapter, int verse){
+		_book = book;
+		_chapter = chapter;
+		_verse = verse;
+	}
+
+	public Reference(string book, int chapter, int startVerse, int endVerse){
+		_book = book;
+		_chapter = chapter;
+		_verse = startVerse;
+		_endVerse = endVerse;
+	}
+
+	public string GetDisplayText(){
+	       if (_endVerse == 0) 
+		       return $"{_book} {_chapter}:{_verse}";
+	       return $"{_book} {_chapter}:{_verse}-{_endVerse}";
+	}
+}
+/*
+ * Class: Scripture
+ *
+ * Attributes:
+ *  _reference : Reference
+ *  _words : List<Word>
+ *
+ * Methods:
+ *  Scripture(reference : Reference, text : string)
+ *  HideRandomWords(numberToHide : int) : void
+ *  GetDisplayText() : string
+ *  IsCompletelyHidden() : bool
+ */
+
+public class Scripture{
+	private Reference _reference;
+	private List<Word> _words = new List<Word>();
+
+	public Scripture(Reference reference, string text){
+		_reference = reference;
+		foreach (string word in text.Split()) _words.Add(new Word(word));
+	}
+
+	public void HideRandomWords(int numberToHide){
+		Random random = new Random();
+		int[] ranksToHide = new int[numberToHide];
+		Array.Fill(ranksToHide, -1);
+		for (int i = 0; i < numberToHide; i++){
+			do {
+				ranksToHide[i] = random.Next(0, _words.Count);
+			} while (Array.IndexOf(ranksToHide, ranksToHide[i]) != -1);
+			_words.Hide(ranksToHide[i]);
+		}
+	}
+
+	public string GetDisplayText(){
+		string result = $"_reference.GetDisplayText()\n";
+		result = String.Join(" ", _words.ConvertAll(
+					word => word.GetDisplayText()));
+		return $"{result}.";
+	}
+
+	public bool IsCompletelyHidden(){
+		for (int i = 0; i < _words.Count; i++)
+			if (!_words(i).IsHidden()) return false;
+		return true;
+	}
+}
+/*
+ * Class: Word
+ *
+ * Attributes:
+ *  _text : string
+ *  _isHidden : bool
+ *
+ * Methods:
+ *  Word(text : string)
+ *
+ *  Hide() : void
+ *  Show() : void
+ *  IsHidden() : bool
+ *  GetDisplayText() : string
+ */
+
+public class Word{
+	private string _text = "";
+	private bool _isHidden = false;
+
+	public Word(string text){
+		_text = text;
+	}
+
+	public void Hide(){
+		_isHidden = true;
+	}
+
+	public void Show(){
+		_isHidden = false;
+	}
+
+	public void IsHidden() => _isHidden;
+
+	public string GetDisplayText(){
+		if (_IsHidden){
+			string blankText = _text;
+			for (int i = 0; i < _text.Length; i++)
+				blankText[i] = "_";
+			return blankText;
+		} else
+			return _text;
+	}
+}
+using System;
+
+class Program{
+	static void Main(string[] args){
+		Reference reference = new Reference("1 Nefi", 3, 7, 8);
+		string verses = "I dogodi se da ja, Nefi, rekoh ocu svome: Poći ću i učiniti ono što Gospod zapovjedi, jer znadem da Gospod ne daje zapovijedi djeci ljudskoj, osim ako ne pripravi put za njih da mogu izvršiti ono što im zapovjedi. I dogodi se, kad otac moj ču te riječi, bijaše silno radostan, jer spozna da Gospod mene blagoslovi.";
+		Scripture scripture = new Scripture(reference, verses);
+		string quit = "";
+		Console.Clear();		
+	}
+}
+/*
+ * Class: Reference
+ *
+ * Attributes:
+ *  _book : string
+ *  _chapter : int
+ *  _verse : int
+ *  _endVerse : int
+ *
+ * Methods:
+ *  Reference(book : string, chapter : int, verse : int)
+ *  Reference(book : string, chapter : int, startVerse : int, endVerse : int)
+ *  
+ *  GetDisplayText() : string
+ */
+
+public class Reference{
+	private string _book = "";
+	private int _chapter, _verse, _endVerse = 0;
+
+	public Reference(string book, int chapter, int verse){
+		_book = book;
+		_chapter = chapter;
+		_verse = verse;
+	}
+
+	public Reference(string book, int chapter, int startVerse, int endVerse){
+		_book = book;
+		_chapter = chapter;
+		_verse = startVerse;
+		_endVerse = endVerse;
+	}
+
+	public string GetDisplayText(){
+	       if (_endVerse == 0) 
+		       return $"{_book} {_chapter}:{_verse}";
+	       return $"{_book} {_chapter}:{_verse}-{_endVerse}";
+	}
+}
+/*
+ * Class: Scripture
+ *
+ * Attributes:
+ *  _reference : Reference
+ *  _words : List<Word>
+ *
+ * Methods:
+ *  Scripture(reference : Reference, text : string)
+ *  HideRandomWords(numberToHide : int) : void
+ *  GetDisplayText() : string
+ *  IsCompletelyHidden() : bool
+ */
+
+public class Scripture{
+	private Reference _reference;
+	private List<Word> _words = new List<Word>();
+
+	public Scripture(Reference reference, string text){
+		_reference = reference;
+		foreach (string word in text.Split()) _words.Add(new Word(word));
+	}
+
+	public void HideRandomWords(int numberToHide){
+		Random random = new Random();
+		int[] ranksToHide = new int[numberToHide];
+		Array.Fill(ranksToHide, -1);
+		for (int i = 0; i < numberToHide; i++){
+			do {
+				ranksToHide[i] = random.Next(0, _words.Count);
+			} while (Array.IndexOf(ranksToHide, ranksToHide[i]) != -1);
+			_words.Hide(ranksToHide[i]);
+		}
+	}
+
+	public string GetDisplayText(){
+		string result = $"_reference.GetDisplayText()\n";
+		result = String.Join(" ", _words.ConvertAll(
+					word => word.GetDisplayText()));
+		return $"{result}.";
+	}
+
+	public bool IsCompletelyHidden(){
+		for (int i = 0; i < _words.Count; i++)
+			if (!_words(i).IsHidden()) return false;
+		return true;
+	}
+}
+/*
+ * Class: Word
+ *
+ * Attributes:
+ *  _text : string
+ *  _isHidden : bool
+ *
+ * Methods:
+ *  Word(text : string)
+ *
+ *  Hide() : void
+ *  Show() : void
+ *  IsHidden() : bool
+ *  GetDisplayText() : string
+ */
+
+public class Word{
+	private string _text = "";
+	private bool _isHidden = false;
+
+	public Word(string text){
+		_text = text;
+	}
+
+	public void Hide(){
+		_isHidden = true;
+	}
+
+	public void Show(){
+		_isHidden = false;
+	}
+
+	public bool IsHidden() => _isHidden;
+
+	public string GetDisplayText(){
+		if (_IsHidden){
+			string blankText = _text;
+			for (int i = 0; i < _text.Length; i++)
+				blankText[i] = "_";
+			return blankText;
+		} else
+			return _text;
+	}
+}
+using System;
+
+class Program{
+	static void Main(string[] args){
+		Reference reference = new Reference("1 Nefi", 3, 7, 8);
+		string verses = "I dogodi se da ja, Nefi, rekoh ocu svome: Poći ću i učiniti ono što Gospod zapovjedi, jer znadem da Gospod ne daje zapovijedi djeci ljudskoj, osim ako ne pripravi put za njih da mogu izvršiti ono što im zapovjedi. I dogodi se, kad otac moj ču te riječi, bijaše silno radostan, jer spozna da Gospod mene blagoslovi.";
+		Scripture scripture = new Scripture(reference, verses);
+		string quit = "";
+		Console.Clear();		
+	}
+}
+/*
+ * Class: Reference
+ *
+ * Attributes:
+ *  _book : string
+ *  _chapter : int
+ *  _verse : int
+ *  _endVerse : int
+ *
+ * Methods:
+ *  Reference(book : string, chapter : int, verse : int)
+ *  Reference(book : string, chapter : int, startVerse : int, endVerse : int)
+ *  
+ *  GetDisplayText() : string
+ */
+
+public class Reference{
+	private string _book = "";
+	private int _chapter, _verse, _endVerse = 0;
+
+	public Reference(string book, int chapter, int verse){
+		_book = book;
+		_chapter = chapter;
+		_verse = verse;
+	}
+
+	public Reference(string book, int chapter, int startVerse, int endVerse){
+		_book = book;
+		_chapter = chapter;
+		_verse = startVerse;
+		_endVerse = endVerse;
+	}
+
+	public string GetDisplayText(){
+	       if (_endVerse == 0) 
+		       return $"{_book} {_chapter}:{_verse}";
+	       return $"{_book} {_chapter}:{_verse}-{_endVerse}";
+	}
+}
+/*
+ * Class: Scripture
+ *
+ * Attributes:
+ *  _reference : Reference
+ *  _words : List<Word>
+ *
+ * Methods:
+ *  Scripture(reference : Reference, text : string)
+ *  HideRandomWords(numberToHide : int) : void
+ *  GetDisplayText() : string
+ *  IsCompletelyHidden() : bool
+ */
+
+public class Scripture{
+	private Reference _reference;
+	private List<Word> _words = new List<Word>();
+
+	public Scripture(Reference reference, string text){
+		_reference = reference;
+		foreach (string word in text.Split()) _words.Add(new Word(word));
+	}
+
+	public void HideRandomWords(int numberToHide){
+		Random random = new Random();
+		int[] ranksToHide = new int[numberToHide];
+		Array.Fill(ranksToHide, -1);
+		for (int i = 0; i < numberToHide; i++){
+			do {
+				ranksToHide[i] = random.Next(0, _words.Count);
+			} while (Array.IndexOf(ranksToHide, ranksToHide[i]) != -1);
+			_words.Hide(ranksToHide[i]);
+		}
+	}
+
+	public string GetDisplayText(){
+		string result = $"_reference.GetDisplayText()\n";
+		result = String.Join(" ", _words.ConvertAll(
+					word => word.GetDisplayText()));
+		return $"{result}.";
+	}
+
+	public bool IsCompletelyHidden(){
+		for (int i = 0; i < _words.Count; i++)
+			if (!_words(i).IsHidden()) return false;
+		return true;
+	}
+}
+/*
+ * Class: Word
+ *
+ * Attributes:
+ *  _text : string
+ *  _isHidden : bool
+ *
+ * Methods:
+ *  Word(text : string)
+ *
+ *  Hide() : void
+ *  Show() : void
+ *  IsHidden() : bool
+ *  GetDisplayText() : string
+ */
+
+public class Word{
+	private string _text = "";
+	private bool _isHidden = false;
+
+	public Word(string text){
+		_text = text;
+	}
+
+	public void Hide(){
+		_isHidden = true;
+	}
+
+	public void Show(){
+		_isHidden = false;
+	}
+
+	public bool IsHidden() => _isHidden;
+
+	public string GetDisplayText(){
+		if (_isHidden){
+			string blankText = _text;
+			for (int i = 0; i < _text.Length; i++)
+				blankText[i] = "_";
+			return blankText;
+		} else
+			return _text;
+	}
+}
+using System;
+
+class Program{
+	static void Main(string[] args){
+		Reference reference = new Reference("1 Nefi", 3, 7, 8);
+		string verses = "I dogodi se da ja, Nefi, rekoh ocu svome: Poći ću i učiniti ono što Gospod zapovjedi, jer znadem da Gospod ne daje zapovijedi djeci ljudskoj, osim ako ne pripravi put za njih da mogu izvršiti ono što im zapovjedi. I dogodi se, kad otac moj ču te riječi, bijaše silno radostan, jer spozna da Gospod mene blagoslovi.";
+		Scripture scripture = new Scripture(reference, verses);
+		string quit = "";
+		
+		do{
+			scripture.HideRandomWords(3);
+			Console.WriteLine(scripture.GetDisplayText());
+			Console.WriteLine("\nPress enter to continue, or \"quit\": ");
+			quit = Console.ReadLine();
+		} while (quit != "quit" || !scripture.IsCompletelyHidden());
+	}
+}
+/*
+ * Class: Reference
+ *
+ * Attributes:
+ *  _book : string
+ *  _chapter : int
+ *  _verse : int
+ *  _endVerse : int
+ *
+ * Methods:
+ *  Reference(book : string, chapter : int, verse : int)
+ *  Reference(book : string, chapter : int, startVerse : int, endVerse : int)
+ *  
+ *  GetDisplayText() : string
+ */
+
+public class Reference{
+	private string _book = "";
+	private int _chapter, _verse, _endVerse = 0;
+
+	public Reference(string book, int chapter, int verse){
+		_book = book;
+		_chapter = chapter;
+		_verse = verse;
+	}
+
+	public Reference(string book, int chapter, int startVerse, int endVerse){
+		_book = book;
+		_chapter = chapter;
+		_verse = startVerse;
+		_endVerse = endVerse;
+	}
+
+	public string GetDisplayText(){
+	       if (_endVerse == 0) 
+		       return $"{_book} {_chapter}:{_verse}";
+	       return $"{_book} {_chapter}:{_verse}-{_endVerse}";
+	}
+}
+/*
+ * Class: Scripture
+ *
+ * Attributes:
+ *  _reference : Reference
+ *  _words : List<Word>
+ *
+ * Methods:
+ *  Scripture(reference : Reference, text : string)
+ *  HideRandomWords(numberToHide : int) : void
+ *  GetDisplayText() : string
+ *  IsCompletelyHidden() : bool
+ */
+
+public class Scripture{
+	private Reference _reference;
+	private List<Word> _words = new List<Word>();
+
+	public Scripture(Reference reference, string text){
+		_reference = reference;
+		foreach (string word in text.Split()) _words.Add(new Word(word));
+	}
+
+	public void HideRandomWords(int numberToHide){
+		Random random = new Random();
+		int[] ranksToHide = new int[numberToHide];
+		Array.Fill(ranksToHide, -1);
+		for (int i = 0; i < numberToHide; i++){
+			do {
+				ranksToHide[i] = random.Next(0, _words.Count);
+			} while (Array.IndexOf(ranksToHide, ranksToHide[i]) != -1);
+			_words[ranksToHide[i]].Hide();
+		}
+	}
+
+	public string GetDisplayText(){
+		string result = $"_reference.GetDisplayText()\n";
+		result = String.Join(" ", _words.ConvertAll(
+					word => word.GetDisplayText()));
+		return $"{result}.";
+	}
+
+	public bool IsCompletelyHidden(){
+		for (int i = 0; i < _words.Count; i++)
+			if (!_words[i].IsHidden()) return false;
+		return true;
+	}
+}
+/*
+ * Class: Word
+ *
+ * Attributes:
+ *  _text : string
+ *  _isHidden : bool
+ *
+ * Methods:
+ *  Word(text : string)
+ *
+ *  Hide() : void
+ *  Show() : void
+ *  IsHidden() : bool
+ *  GetDisplayText() : string
+ */
+
+public class Word{
+	private string _text = "";
+	private bool _isHidden = false;
+
+	public Word(string text){
+		_text = text;
+	}
+
+	public void Hide(){
+		_isHidden = true;
+	}
+
+	public void Show(){
+		_isHidden = false;
+	}
+
+	public bool IsHidden() => _isHidden;
+
+	public string GetDisplayText(){
+		if (_isHidden){
+			return new string('_', _text.Length);
+		} else {
+			return _text;
+		}
+	}
+}
+using System;
+
+class Program{
+	static void Main(string[] args){
+		Reference reference = new Reference("1 Nefi", 3, 7, 8);
+		string verses = "I dogodi se da ja, Nefi, rekoh ocu svome: Poći ću i učiniti ono što Gospod zapovjedi, jer znadem da Gospod ne daje zapovijedi djeci ljudskoj, osim ako ne pripravi put za njih da mogu izvršiti ono što im zapovjedi. I dogodi se, kad otac moj ču te riječi, bijaše silno radostan, jer spozna da Gospod mene blagoslovi.";
+		Scripture scripture = new Scripture(reference, verses);
+		string quit = "";
+		Console.Clear();
+		do{
+			scripture.HideRandomWords(3);
+			Console.WriteLine(scripture.GetDisplayText());
+			Console.WriteLine("\nPress enter to continue, or \"quit\": ");
+			quit = Console.ReadLine();
+		} while (quit != "quit" || !scripture.IsCompletelyHidden());
+	}
+}
+/*
+ * Class: Reference
+ *
+ * Attributes:
+ *  _book : string
+ *  _chapter : int
+ *  _verse : int
+ *  _endVerse : int
+ *
+ * Methods:
+ *  Reference(book : string, chapter : int, verse : int)
+ *  Reference(book : string, chapter : int, startVerse : int, endVerse : int)
+ *  
+ *  GetDisplayText() : string
+ */
+
+public class Reference{
+	private string _book = "";
+	private int _chapter, _verse, _endVerse = 0;
+
+	public Reference(string book, int chapter, int verse){
+		_book = book;
+		_chapter = chapter;
+		_verse = verse;
+	}
+
+	public Reference(string book, int chapter, int startVerse, int endVerse){
+		_book = book;
+		_chapter = chapter;
+		_verse = startVerse;
+		_endVerse = endVerse;
+	}
+
+	public string GetDisplayText(){
+	       if (_endVerse == 0) 
+		       return $"{_book} {_chapter}:{_verse}";
+	       return $"{_book} {_chapter}:{_verse}-{_endVerse}";
+	}
+}
+/*
+ * Class: Scripture
+ *
+ * Attributes:
+ *  _reference : Reference
+ *  _words : List<Word>
+ *
+ * Methods:
+ *  Scripture(reference : Reference, text : string)
+ *  HideRandomWords(numberToHide : int) : void
+ *  GetDisplayText() : string
+ *  IsCompletelyHidden() : bool
+ */
+
+public class Scripture{
+	private Reference _reference;
+	private List<Word> _words = new List<Word>();
+
+	public Scripture(Reference reference, string text){
+		_reference = reference;
+		foreach (string word in text.Split()) _words.Add(new Word(word));
+	}
+
+	public void HideRandomWords(int numberToHide){
+		Random random = new Random();
+		int[] ranksToHide = new int[numberToHide];
+		Array.Fill(ranksToHide, -1);
+		for (int i = 0; i < numberToHide; i++){
+			do {
+				ranksToHide[i] = random.Next(0, _words.Count);
+			} while (Array.IndexOf(ranksToHide, ranksToHide[i]) != -1);
+			_words[ranksToHide[i]].Hide();
+		}
+	}
+
+	public string GetDisplayText(){
+		string result = $"_reference.GetDisplayText()\n";
+		result = String.Join(" ", _words.ConvertAll(
+					word => word.GetDisplayText()));
+		return $"{result}.";
+	}
+
+	public bool IsCompletelyHidden(){
+		for (int i = 0; i < _words.Count; i++)
+			if (!_words[i].IsHidden()) return false;
+		return true;
+	}
+}
+/*
+ * Class: Word
+ *
+ * Attributes:
+ *  _text : string
+ *  _isHidden : bool
+ *
+ * Methods:
+ *  Word(text : string)
+ *
+ *  Hide() : void
+ *  Show() : void
+ *  IsHidden() : bool
+ *  GetDisplayText() : string
+ */
+
+public class Word{
+	private string _text = "";
+	private bool _isHidden = false;
+
+	public Word(string text){
+		_text = text;
+	}
+
+	public void Hide(){
+		_isHidden = true;
+	}
+
+	public void Show(){
+		_isHidden = false;
+	}
+
+	public bool IsHidden() => _isHidden;
+
+	public string GetDisplayText(){
+		if (_isHidden){
+			return new string('_', _text.Length);
+		} else {
+			return _text;
+		}
+	}
+}
+class Program{
+	static void Main(string[] args){
+		Reference reference = new Reference("1 Nefi", 3, 7, 8);
+		Verses verses = new Verses("I dogodi se da ja, Nefi, rekoh ocu svome: Poći ću i učiniti ono što Gospod zapovjedi, jer znadem da Gospod ne daje zapovijedi djeci ljudskoj, osim ako ne pripravi put za njih da mogu izvršiti ono što im zapovjedi. I dogodi se, kad otac moj ču te riječi, bijaše silno radostan, jer spozna da Gospod mene blagoslovi.");
+		Scripture scripture = new Scripture(reference, verses);
+		Console.Clear();
+		scripture.Display();
+		Console.WriteLine("\nPress ENTER to continue, or \"quit\" to exit.");
+		string choice = Console.ReadLine();
+
+                List<int> ranks = new List<int>();
+                List<int> random_ranks = new List<int>();
+                Random random = new Random();
+                for (int i = 0; i < verses.GetWordCount(); i++)
+                        ranks.Add(i);
+                for (int i = 0; i < verses.GetWordCount(); i++){
+			int index = random.Next(0, ranks.Count);
+			int value = ranks[index];
+			ranks.RemoveAt(index);
+			random_ranks.Add(value);
+		}
+		int fadeCount = 0;
+
+		while (choice != "quit"){
+			Console.Clear();
+
+			for (int i = 0;
+				i < 5 && !(fadeCount > verses.GetWordCount());
+				i++, fadeCount++)
+				scripture.HideWord(fadeCount);
+
+			scripture.Display();
+			Console.WriteLine("ENTER to continue, \"quit\" to exit.");
+			choice = Console.ReadLine();
+		}
+
+	}
+}
+public class Reference{
+	private string _book = "";
+	private int _chapter, _startVerse, _endVerse = 0;
+
+	public Reference(string book, int chapter, int verse){
+		_book = book;
+		_chapter = chapter;
+		_startVerse = verse;
+	}
+
+	public Reference(string book, int chapter, int startVerse, int endVerse){
+		_book = book;
+		_chapter = chapter;
+		_startVerse = startVerse;
+		_endVerse = endVerse;
+	}
+
+	public void Display(){
+		if (_endVerse == 0)
+			Console.Write($"{_book} {_chapter}:{_startVerse}: ");
+		else
+			Console.Write($"{_book} " +
+				$"{_chapter}:{_startVerse}-{_endVerse}: ");
+	}
+}
+public class Scripture{
+	private Reference _reference;
+	private Verses _verses;
+
+	public Scripture(Reference reference, Verses verses){
+		_reference = reference;
+		_verses = verses;
+	}
+
+	public void Display(){
+		_reference.Display();
+		_verses.Display();
+	}
+
+	public void HideWord(int fadeCount){
+		_verses.HideWord(fadeCount);
+	}
+}
+public class Verses{
+	private List<Word> _words = new List<Word>();
+	
+	public Verses(string verses){
+		foreach (string word in verses.Split())
+			_words.Add(new Word(word));
+	}
+
+	public void Display(){
+		Console.WriteLine(string.Join(" ", _words.Select(w => w.GetWord())));
+	}
+
+	public int GetWordCount(){
+		return _words.Count;
+	}
+
+	public void HideWord(int fadeCount){
+		_words[fadeCount].Hide();
+	}
+}
+public class Word{
+	private string _word = "";
+
+	public Word(string word){
+		_word = word;
+	}
+
+	public string GetWord(){
+		return _word;
+	}
+
+	public void Hide(){
+		_word = new string('_', _word.Length);
+	}
+}

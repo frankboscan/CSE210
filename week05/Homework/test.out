@@ -1,0 +1,62 @@
+public class Assignment{
+	protected string _studentName;
+	protected string _topic;
+
+	public GetSummary(){
+		return $"{_studentName}: {_topic}"
+	}
+}
+public class MathAssignement : Assignment{
+	private string _textbookSection;
+	private string _problems;
+
+	public GetHomeworkList(){
+		return $"{_textbookSection}, {_problems}"
+	}
+}
+using System;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        Console.WriteLine("Hello World! This is the Homework Project.");
+    }
+}public class WritingAssignment{
+	private string _title;
+
+	public GetWritingInformation(){
+		return _title;
+	}
+}
+public class Assignment{
+	protected string _studentName;
+	protected string _topic;
+
+	public string GetSummary(){
+		return $"{_studentName}: {_topic}"
+	}
+}
+public class MathAssignment : Assignment{
+	private string _textbookSection;
+	private string _problems;
+
+	public string GetHomeworkList(){
+		return $"{_textbookSection}, {_problems}"
+	}
+}
+using System;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        Console.WriteLine("Hello World! This is the Homework Project.");
+    }
+}public class WritingAssignment : Assignment{
+	private string _title;
+
+	public string GetWritingInformation(){
+		return _title;
+	}
+}
