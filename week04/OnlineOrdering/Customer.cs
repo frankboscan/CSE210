@@ -1,6 +1,6 @@
 public class Customer{
 	private string _name;
-	private Address _address = new Address();
+	private Address _address = new Address("", "", "", "");
 
 	public Customer(string name, Address address){
 		_name = name;
@@ -12,11 +12,11 @@ public class Customer{
 	}
 
 	public string GetAddress(){
-		return _address.GetWholeAddress();
+		return _address.GetAddress();
 	}
 	
 	public bool InUsa(){
-		return address.InUsa();
+		return _address.InUsa();
 	}
 
 	public double GetShippingCost(){

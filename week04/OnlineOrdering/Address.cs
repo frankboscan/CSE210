@@ -12,7 +12,7 @@ public class Address{
 		return _country == "USA";
 	}
 
-	public string GetWholeAddress(){
-		return $"{_streetAddress}, {_city}, {_stateProvince}, {_country}";
+	public string GetAddress(){
+		return $"{_streetAddress}\n{_city}, {_stateProvince}, {_country}";
 	}
 }
