@@ -1,0 +1,181 @@
+public class Circle : Shape{
+        private double _radius;
+
+        public void SetRadius(double radius){
+                _radius = radius;
+        }
+
+        public override float GetArea(){
+                return Math.PI * _radius;
+        }
+}
+using System;
+
+class Program{
+	static void Main(string[] args){
+		
+	}
+}
+public class Rectangle : Shape{
+	private double _length;
+	private double _width;
+
+	public void SetLength(double length){
+		_length = length;
+	}
+
+	public void SetWidth(double width){
+                _width = width;
+        }
+
+	public override double GetArea(){
+		return _length * _width;
+	}
+}
+public class Shape{
+	protected string _color;
+
+	public string GetColor(){
+		return _color;
+	}
+
+	public void SetColor(string color){
+		_color = color;
+	}
+
+	public abstract GetArea();
+}
+public class Square : Shape{
+	private double _side;
+
+	public void SetSide(double side){
+		_side = side;
+	}
+
+	public override float GetArea(){
+		return _side * _side;
+	}
+}
+public class Circle : Shape{
+        private double _radius;
+
+        public void SetRadius(double radius){
+                _radius = radius;
+        }
+
+        public override double GetArea(){
+                return Math.PI * _radius;
+        }
+}
+using System;
+
+class Program{
+	static void Main(string[] args){
+		
+	}
+}
+public class Rectangle : Shape{
+	private double _length;
+	private double _width;
+
+	public void SetLength(double length){
+		_length = length;
+	}
+
+	public void SetWidth(double width){
+                _width = width;
+        }
+
+	public override double GetArea(){
+		return _length * _width;
+	}
+}
+public class Shape{
+	protected string _color;
+
+	public string GetColor(){
+		return _color;
+	}
+
+	public void SetColor(string color){
+		_color = color;
+	}
+
+	public abstract double GetArea();
+}
+public class Square : Shape{
+	private double _side;
+
+	public void SetSide(double side){
+		_side = side;
+	}
+
+	public override double GetArea(){
+		return _side * _side;
+	}
+}
+public class Circle : Shape{
+        private double _radius;
+
+        public void SetRadius(double radius){
+                _radius = radius;
+        }
+
+        public override double GetArea(){
+                return Math.PI * _radius;
+        }
+}
+using System;
+
+class Program{
+	static void Main(string[] args){
+		List<Shape> shapes = new List<Shape>();
+		shapes.Add(new Square(2, "blue"));
+		Console.WriteLine(shapes[0].GetColor() + shapes[0].GetArea());
+	}
+}
+public class Rectangle : Shape{
+	private double _length;
+	private double _width;
+
+	public void SetLength(double length){
+		_length = length;
+	}
+
+	public void SetWidth(double width){
+                _width = width;
+        }
+
+	public override double GetArea(){
+		return _length * _width;
+	}
+}
+public abstract class Shape{
+	protected string _color;
+
+	public string GetColor(){
+		return _color;
+	}
+
+	public void SetColor(string color){
+		_color = color;
+	}
+
+	public abstract double GetArea();
+}
+public class Square : Shape{
+	private double _side;
+
+	public Square(string color, double side){
+		_color = color;
+		_side = side;
+	}
+
+	public void SetSide(double side){
+		_side = side;
+	}
+
+	public override double GetArea(){
+		return _side * _side;
+	}
+}

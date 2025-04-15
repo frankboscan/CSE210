@@ -1,11 +1,16 @@
 public class Square : Shape{
 	private double _side;
 
+	public Square(string color, double side){
+		_color = color;
+		_side = side;
+	}
+
 	public void SetSide(double side){
 		_side = side;
 	}
 
-	public override float GetArea(){
+	public override double GetArea(){
 		return _side * _side;
 	}
 }
