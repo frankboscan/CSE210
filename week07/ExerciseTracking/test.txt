@@ -1,0 +1,360 @@
+public class Activity{
+	protected string _date;
+	protected int _minutes;
+
+	public Activity(string date, int minutes){
+		_date = date;
+		_minutes = minutes;
+	}
+
+	public string GetSummary(){
+		return $"{_date} {GetType()} ({_minutes} min) - Distance {GetDistance()} km, Speed {GetSpeed()} km/h, Pace {GetPace()} min/km";
+	}
+
+	public abstract double GetDistance();
+	public abstract double GetSpeed();
+	public abstract double GetPace();
+}
+public class Bike : Activity{
+        private double _speed;
+
+        public Run(string date, int minutes, double speed) : base(date, minutes){
+                _speed = speed;
+        }
+
+	public override double GetDistance(){
+                return _speed * _minutes;
+        }
+
+        public override double GetSpeed();
+		return _speed;
+	}
+
+        public override double GetPace(){
+		return 60 / _speed;
+	}
+}
+using System;
+
+class Program{
+	static void Main(string[] args){
+		List<Activity> activities = new List<Activity>{
+			new Run("02 Jan 2025", 60, 10.2),
+			new Swim("03 Jan 2025", 45, 30),
+			new Bike("04 Jan 2025", 90, 20),
+		};
+		foreach (Activity activity in activities)
+			activity.GetSummary();
+	}
+}
+public class Run : Activity{
+	private double _distance;
+
+	public Run(string date, int minutes, double distance) : base(date, minutes){
+		_distance = distance;
+	}
+
+        public override double GetDistance(){
+		return _distance;
+	}
+        public override double GetSpeed(){
+		return _distance / _minutes * 60;
+	}
+		
+        public override double GetPace(){
+		return 60 * GetSpeed();
+	}
+}
+public class Swim : Activity{
+        private int _laps;
+
+        public Swim(string date, int minutes, int laps) : base(date, minutes){
+                _laps = laps;
+        }
+
+	public int GetLaps(){
+		return _laps;
+	}
+
+        public override double GetDistance(){
+                return _laps * 50 / 1000;
+        }
+
+	public override double GetSpeed(){
+		return GetDistance() / _minutes * 60;
+	}
+
+	public override double GetPace(){
+		return 60 / GetSpeed();
+	}
+}
+public class Activity{
+	protected string _date;
+	protected int _minutes;
+
+	public Activity(string date, int minutes){
+		_date = date;
+		_minutes = minutes;
+	}
+
+	public string GetSummary(){
+		return $"{_date} {GetType().Name} ({_minutes} min) - Distance {GetDistance():F2} km, Speed {GetSpeed():F2} km/h, Pace {GetPace():F2} min/km";
+	}
+
+	public abstract double GetDistance();
+	public abstract double GetSpeed();
+	public abstract double GetPace();
+}
+public class Bike : Activity{
+        private double _speed;
+
+        public Bike(string date, int minutes, double speed) : base(date, minutes){
+                _speed = speed;
+        }
+
+	public override double GetDistance(){
+                return _speed * _minutes / 60;
+        }
+
+        public override double GetSpeed(){
+		return _speed;
+	}
+
+        public override double GetPace(){
+		return 60 / _speed;
+	}
+}
+using System;
+
+class Program{
+	static void Main(string[] args){
+		List<Activity> activities = new List<Activity>{
+			new Run("02 Jan 2025", 60, 10.2),
+			new Swim("03 Jan 2025", 45, 30),
+			new Bike("04 Jan 2025", 90, 20),
+		};
+		foreach (Activity activity in activities)
+			Console.WriteLine(activity.GetSummary());
+	}
+}
+public class Run : Activity{
+	private double _distance;
+
+	public Run(string date, int minutes, double distance) : base(date, minutes){
+		_distance = distance;
+	}
+
+        public override double GetDistance(){
+		return _distance;
+	}
+        public override double GetSpeed(){
+		return _distance / _minutes * 60;
+	}
+		
+        public override double GetPace(){
+		return 60 / GetSpeed();
+	}
+}
+public class Swim : Activity{
+        private int _laps;
+
+        public Swim(string date, int minutes, int laps) : base(date, minutes){
+                _laps = laps;
+        }
+
+	public int GetLaps(){
+		return _laps;
+	}
+
+        public override double GetDistance(){
+                return _laps * 50 / 1000;
+        }
+
+	public override double GetSpeed(){
+		return GetDistance() / _minutes * 60;
+	}
+
+	public override double GetPace(){
+		return 60 / GetSpeed();
+	}
+}
+public abstract class Activity{
+	protected string _date;
+	protected int _minutes;
+
+	public Activity(string date, int minutes){
+		_date = date;
+		_minutes = minutes;
+	}
+
+	public string GetSummary(){
+		return $"{_date} {GetType().Name} ({_minutes} min) - Distance {GetDistance():F2} km, Speed {GetSpeed():F2} km/h, Pace {GetPace():F2} min/km";
+	}
+
+	public abstract double GetDistance();
+	public abstract double GetSpeed();
+	public abstract double GetPace();
+}
+public class Bike : Activity{
+        private double _speed;
+
+        public Bike(string date, int minutes, double speed) : base(date, minutes){
+                _speed = speed;
+        }
+
+	public override double GetDistance(){
+                return _speed * _minutes / 60;
+        }
+
+        public override double GetSpeed(){
+		return _speed;
+	}
+
+        public override double GetPace(){
+		return 60 / _speed;
+	}
+}
+using System;
+
+class Program{
+	static void Main(string[] args){
+		List<Activity> activities = new List<Activity>{
+			new Run("02 Jan 2025", 60, 10.2),
+			new Swim("03 Jan 2025", 45, 30),
+			new Bike("04 Jan 2025", 90, 20),
+		};
+		foreach (Activity activity in activities)
+			Console.WriteLine(activity.GetSummary());
+	}
+}
+public class Run : Activity{
+	private double _distance;
+
+	public Run(string date, int minutes, double distance) : base(date, minutes){
+		_distance = distance;
+	}
+
+        public override double GetDistance(){
+		return _distance;
+	}
+        public override double GetSpeed(){
+		return _distance / _minutes * 60;
+	}
+		
+        public override double GetPace(){
+		return 60 / GetSpeed();
+	}
+}
+public class Swim : Activity{
+        private int _laps;
+
+        public Swim(string date, int minutes, int laps) : base(date, minutes){
+                _laps = laps;
+        }
+
+	public int GetLaps(){
+		return _laps;
+	}
+
+        public override double GetDistance(){
+                return _laps * 50 / 1000;
+        }
+
+	public override double GetSpeed(){
+		return GetDistance() / _minutes * 60;
+	}
+
+	public override double GetPace(){
+		return 60 / GetSpeed();
+	}
+}
+public abstract class Activity{
+	protected string _date;
+	protected int _minutes;
+
+	public Activity(string date, int minutes){
+		_date = date;
+		_minutes = minutes;
+	}
+
+	public string GetSummary(){
+		return $"{_date} {GetType().Name} ({_minutes} min) - Distance {GetDistance():F2} km, Speed {GetSpeed():F2} km/h, Pace {GetPace():F2} min/km";
+	}
+
+	public virtual double GetDistance(){}
+	public virtual double GetSpeed(){}
+	public virtual double GetPace(){}
+}
+public class Bike : Activity{
+        private double _speed;
+
+        public Bike(string date, int minutes, double speed) : base(date, minutes){
+                _speed = speed;
+        }
+
+	public override double GetDistance(){
+                return _speed * _minutes / 60;
+        }
+
+        public override double GetSpeed(){
+		return _speed;
+	}
+
+        public override double GetPace(){
+		return 60 / _speed;
+	}
+}
+using System;
+
+class Program{
+	static void Main(string[] args){
+		List<Activity> activities = new List<Activity>{
+			new Run("02 Jan 2025", 60, 10.2),
+			new Swim("03 Jan 2025", 45, 30),
+			new Bike("04 Jan 2025", 90, 20),
+		};
+		foreach (Activity activity in activities)
+			Console.WriteLine(activity.GetSummary());
+	}
+}
+public class Run : Activity{
+	private double _distance;
+
+	public Run(string date, int minutes, double distance) : base(date, minutes){
+		_distance = distance;
+	}
+
+        public override double GetDistance(){
+		return _distance;
+	}
+        public override double GetSpeed(){
+		return _distance / _minutes * 60;
+	}
+		
+        public override double GetPace(){
+		return 60 / GetSpeed();
+	}
+}
+public class Swim : Activity{
+        private int _laps;
+
+        public Swim(string date, int minutes, int laps) : base(date, minutes){
+                _laps = laps;
+        }
+
+	public int GetLaps(){
+		return _laps;
+	}
+
+        public override double GetDistance(){
+                return _laps * 50 / 1000;
+        }
+
+	public override double GetSpeed(){
+		return GetDistance() / _minutes * 60;
+	}
+
+	public override double GetPace(){
+		return 60 / GetSpeed();
+	}
+}
