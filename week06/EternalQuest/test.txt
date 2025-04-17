@@ -1,0 +1,1779 @@
+public class ChecklistGoal : Goal{
+	private int _timesCompleted, _timesToComplete, _bonus;
+
+        public override void Accomplish(){
+                _timesCompleted++;
+                Console.WriteLine($"Congratulations! You earned {_points} points!");
+		if (_timesCompleted == _timesToComplete)
+			Console.WriteLine(
+				$"Goal completed {_timesToComplete} times. Bonus: {_bonus} points.");
+        }
+
+	public override int GetPointsEarned(){
+		if (_timesCompleted != _timesToComplete)
+			return _points;
+		return _bonus + _points;
+	}
+
+	public override void SetCheckBox(){
+		_checkbox = $"[{_timesCompleted}/{_timesToComplete}]";
+	}
+
+	public void SetTimesCompleted(int timesCompleted){
+		_timesCompleted = timesCompleted;
+	}
+	
+	public int GetTimesCompleted(){
+		return _timesCompleted;
+	}
+
+	public void SetTimesToComplete(int timesToComplete){
+		_timesToComplete = timesToComplete;
+	}
+
+	public int GetTimesToComplete(){
+		return _timesToComplete;
+	}
+
+        public string GetDetailsString(){
+                return $"{_checkbox} {_name}: {_description}";
+        }
+}
+public class EternalGoal : Goal{
+        public Goal(string name, string description, int points){
+                _name = name;
+                _description = description;
+                _points = points;
+                _isComplete = false;
+        }
+
+        public override void Accomplish(){
+                Console.WriteLine($"Congratulations! You earned {_points} points!");
+        }
+
+	public override int GetPointsEarned(){
+		return _points;
+	}
+}
+public abstract class Goal{
+	protected string _name, _description, _checkBox;
+	protected bool _isComplete;
+	protected int _points;
+
+	public abstract void Accomplish();
+	public abstract bool IsComplete();
+	public abstract void SetCheckBox();
+	public abstract int GetPointsEarned();
+
+	public Goal(string name, string description, string checkbox, bool isComplete){
+		_name = name;
+		_description = description;
+	}
+
+	public void SetIsComplete(){
+		_isComplete = true;
+	}
+
+	public string GetCheckBox(){
+		return _checkBox;
+	}
+
+	public string GetDetailsString(){
+		return $"{_name}, {_points} points: {_description}";
+	}
+
+	public string GetStringRepresentation(){
+		return $"{_name},{_description},{_longDescription},{_checkBox}";
+	}
+}
+public class GoalManager{
+	private int _pointGoal, _points;
+	private List<Goal> _goals = new List<Goal>();
+
+	public GoalManager(int points, int goal){
+		_points = points;
+		_pointGoal = goal;
+	}
+
+	public int AddPoints(int points){
+		_points += points;
+	}
+
+	public SetPointGoal(int points){
+		_pointGoal += points;
+	}
+
+	public GetPoints(){
+		return	_points;
+	}
+
+	public GetPointGoal(){
+		return _pointGoal;
+	}
+
+	public void AddGoal(Goal goal){
+		_goals.Add(goal);
+	}
+
+	public void GetGoals(){
+		return _goals;
+	}
+
+	public void ShowGoals(){
+		for (int i = 0; i < _goals.Count; i++)
+			Console.Writeline($"{i}: {g.GetDetailsString()}");
+	}
+
+	public void ShowGoal(int i){
+		_goals[i].Show();
+	}
+
+	public string GetProgress(){
+		return $"Current points: {_points} out of {_pointGoal} goal.";
+	}
+
+	public void Accomplish(int i){
+		goals[i].Accomplish();
+		_points += goals[i].GetPointsEarned();
+	}
+}
+using System;
+
+class Program{
+	static void Main(string[] args){
+		PointManager manager = new PointManager(0, 0);
+		Console.WriteLine("Welcome to your goal tracker!");
+		Console.WriteLine($"Points so far: {manager.GetPoints()}");
+		Console.WriteLine($"Goal: {manager.GetPointGoal()}");
+		bool go = true;
+		while (go){
+			Console.WriteLine("Select from the following options:");
+			Console.WriteLine("0. Indicate goal completion");
+			Console.WriteLine("1. Set new point objective");
+			Console.WriteLine("2. Create new goal");
+			Console.WriteLine("3. See current goals");
+			Console.WriteLine("4. Load goals");
+			Console.WriteLine("5. Save goals");
+			Console.WriteLine("6. Quit");
+			int option = int.Parse(Console.ReadLine());
+			switch (option){
+				case 0:
+					Console.WriteLine("What did you accomplish? ");
+					manager.ShowGoals();
+					manager.Accomplish(Console.ReadLine());
+				case 1:
+					Console.WriteLine("How many points? ");
+					manager.SetPointGoal(Console.ReadLine());
+					Console.WriteLine(manager.GetProgress());
+					break;
+				case 2:
+					Console.WriteLine("What kind of goal? ");
+					Console.WriteLine("1. Simple");
+					Console.WriteLine("2. Eternal");
+					Console.WriteLine("3. Checklist");
+					int choice = int.Parse(Console.ReadLine());
+					switch (choice){
+                                                        Console.WriteLine("Goal name: ");
+                                                        string name = Console.ReadLine();
+                                                        Console.WriteLine("Brief description: ");
+                                                        string description = Console.ReadLine();
+                                                        Console.WriteLine("Number of points: ");
+                                                        int points = int.Parse(Console.ReadLine());
+						case 1:
+							manager.AddGoal(
+								new SimpleGoal(name, description, points));
+							Console.WriteLine($"Added: {
+								manager.ShowGoal(manager.Count - 1)}");
+						case 2:
+							manager.AddGoal(new EternalGoal(
+								name, description, points));
+							Console.WriteLine($"Added: {
+								manager.ShowGoal(manager.Count - 1)}");
+						case 3:
+							Console.WriteLine("Times to complete: ");
+							times_to_complete = int.Parse(Console.ReadLine());
+							Console.WriteLine("Bonus upon completion: ");
+							bonus = int.Parse(Console.ReadLine());
+							manager.AddGoal(new ChecklistGoal(
+								name, description, times_to_complete,
+								points, bonus));
+							Console.WriteLine($"Added: {
+								manager.ShowGoal(manager.Count - 1)}");
+						default:
+							Console.WriteLine("Invalid option.");
+							break;
+					}
+					break;
+				case 3:
+					manager.ShowGoals();
+					break;
+				case 4:
+					break;
+				case 5:
+					break;
+				case 6:
+					go = false;
+					break;
+			}
+		}
+	}
+}
+public class SimpleGoal : Goal{
+	public override void SetCheckBox(){
+		if (_isComplete)
+			_checkBox = "[x]";
+		else
+			_checkBox = "[ ]";
+	}
+
+	public override void Accomplish(){
+		SetIsComplete();
+		Console.WriteLine($"Congratulations! You earned {_points} points!");
+	}
+
+	public override int GetPointsEarned(){
+		return _points;
+	}
+
+        public Goal(string name, string description, int points){
+                _name = name;
+                _description = description;
+                _points = points;
+		_isComplete = false;
+		_checkBox = SetCheckBox();
+	}
+
+}
+public class ChecklistGoal : Goal{
+	private int _timesCompleted, _timesToComplete, _bonus;
+
+        public override void Accomplish(){
+                _timesCompleted++;
+                Console.WriteLine($"Congratulations! You earned {_points} points!");
+		if (_timesCompleted == _timesToComplete)
+			Console.WriteLine(
+				$"Goal completed {_timesToComplete} times. Bonus: {_bonus} points.");
+        }
+
+	public override int GetPointsEarned(){
+		if (_timesCompleted != _timesToComplete)
+			return _points;
+		return _bonus + _points;
+	}
+
+	public override void SetCheckBox(){
+		_checkbox = $"[{_timesCompleted}/{_timesToComplete}]";
+	}
+
+	public void SetTimesCompleted(int timesCompleted){
+		_timesCompleted = timesCompleted;
+	}
+	
+	public int GetTimesCompleted(){
+		return _timesCompleted;
+	}
+
+	public void SetTimesToComplete(int timesToComplete){
+		_timesToComplete = timesToComplete;
+	}
+
+	public int GetTimesToComplete(){
+		return _timesToComplete;
+	}
+
+        public string GetDetailsString(){
+                return $"{_checkbox} {_name}: {_description}";
+        }
+}
+public class EternalGoal : Goal{
+        public Goal(string name, string description, int points){
+                _name = name;
+                _description = description;
+                _points = points;
+                _isComplete = false;
+        }
+
+        public override void Accomplish(){
+                Console.WriteLine($"Congratulations! You earned {_points} points!");
+        }
+
+	public override int GetPointsEarned(){
+		return _points;
+	}
+}
+public abstract class Goal{
+	protected string _name, _description, _checkBox;
+	protected bool _isComplete;
+	protected int _points;
+
+	public abstract void Accomplish();
+	public abstract bool IsComplete();
+	public abstract void SetCheckBox();
+	public abstract int GetPointsEarned();
+
+	public Goal(string name, string description, string checkbox, bool isComplete){
+		_name = name;
+		_description = description;
+	}
+
+	public void SetIsComplete(){
+		_isComplete = true;
+	}
+
+	public string GetCheckBox(){
+		return _checkBox;
+	}
+
+	public string GetDetailsString(){
+		return $"{_name}, {_points} points: {_description}";
+	}
+
+	public string GetStringRepresentation(){
+		return $"{_name},{_description},{_longDescription},{_checkBox}";
+	}
+}
+public class GoalManager{
+	private int _pointGoal, _points;
+	private List<Goal> _goals = new List<Goal>();
+
+	public GoalManager(int points, int goal){
+		_points = points;
+		_pointGoal = goal;
+	}
+
+	public int AddPoints(int points){
+		_points += points;
+	}
+
+	public SetPointGoal(int points){
+		_pointGoal += points;
+	}
+
+	public GetPoints(){
+		return	_points;
+	}
+
+	public GetPointGoal(){
+		return _pointGoal;
+	}
+
+	public void AddGoal(Goal goal){
+		_goals.Add(goal);
+	}
+
+	public void GetGoals(){
+		return _goals;
+	}
+
+	public void ShowGoals(){
+		for (int i = 0; i < _goals.Count; i++)
+			Console.Writeline($"{i}: {g.GetDetailsString()}");
+	}
+
+	public void ShowGoal(int i){
+		_goals[i].Show();
+	}
+
+	public string GetProgress(){
+		return $"Current points: {_points} out of {_pointGoal} goal.";
+	}
+
+	public void Accomplish(int i){
+		goals[i].Accomplish();
+		_points += goals[i].GetPointsEarned();
+	}
+}
+using System;
+
+class Program{
+	static void Main(string[] args){
+		PointManager manager = new PointManager(0, 0);
+		Console.WriteLine("Welcome to your goal tracker!");
+		Console.WriteLine($"Points so far: {manager.GetPoints()}");
+		Console.WriteLine($"Goal: {manager.GetPointGoal()}");
+		bool go = true;
+		while (go){
+			Console.WriteLine("Select from the following options:");
+			Console.WriteLine("0. Indicate goal completion");
+			Console.WriteLine("1. Set new point objective");
+			Console.WriteLine("2. Create new goal");
+			Console.WriteLine("3. See current goals");
+			Console.WriteLine("4. Load goals");
+			Console.WriteLine("5. Save goals");
+			Console.WriteLine("6. Quit");
+			int option = int.Parse(Console.ReadLine());
+			switch (option){
+				case 0:
+					Console.WriteLine("What did you accomplish? ");
+					manager.ShowGoals();
+					manager.Accomplish(int.Parse(Console.ReadLine()));
+					break;
+				case 1:
+					Console.WriteLine("How many points? ");
+					manager.SetPointGoal(Console.ReadLine());
+					Console.WriteLine(manager.GetProgress());
+					break;
+				case 2:
+					Console.WriteLine("What kind of goal? ");
+					Console.WriteLine("1. Simple");
+					Console.WriteLine("2. Eternal");
+					Console.WriteLine("3. Checklist");
+					int choice = int.Parse(Console.ReadLine());
+					Console.WriteLine("Goal name: ");
+					string name = Console.ReadLine();
+					Console.WriteLine("Brief description: ");
+					string description = Console.ReadLine();
+					Console.WriteLine("Number of points: ");
+					int points = int.Parse(Console.ReadLine());
+					switch (choice){
+						case 1:
+							manager.AddGoal(
+								new SimpleGoal(name, description, points));
+							Console.WriteLine($"Added: {
+								manager.ShowGoal(manager.Count - 1)}");
+							break;
+						case 2:
+							manager.AddGoal(new EternalGoal(
+								name, description, points));
+							Console.WriteLine($"Added: {
+								manager.ShowGoal(manager.Count - 1)}");
+							break;
+						case 3:
+							Console.WriteLine("Times to complete: ");
+							times_to_complete = int.Parse(Console.ReadLine());
+							Console.WriteLine("Bonus upon completion: ");
+							bonus = int.Parse(Console.ReadLine());
+							manager.AddGoal(new ChecklistGoal(
+								name, description, times_to_complete,
+								points, bonus));
+							Console.WriteLine($"Added: {
+								manager.ShowGoal(manager.Count - 1)}");
+							break;
+						default:
+							Console.WriteLine("Invalid option.");
+							break;
+					}
+					break;
+				case 3:
+					manager.ShowGoals();
+					break;
+				case 4:
+					break;
+				case 5:
+					break;
+				case 6:
+					go = false;
+					break;
+			}
+		}
+	}
+}
+public class SimpleGoal : Goal{
+	public override void SetCheckBox(){
+		if (_isComplete)
+			_checkBox = "[x]";
+		else
+			_checkBox = "[ ]";
+	}
+
+	public override void Accomplish(){
+		SetIsComplete();
+		Console.WriteLine($"Congratulations! You earned {_points} points!");
+	}
+
+	public override int GetPointsEarned(){
+		return _points;
+	}
+
+        public Goal(string name, string description, int points){
+                _name = name;
+                _description = description;
+                _points = points;
+		_isComplete = false;
+		_checkBox = SetCheckBox();
+	}
+
+}
+public class ChecklistGoal : Goal{
+	private int _timesCompleted, _timesToComplete, _bonus;
+
+        public override void Accomplish(){
+                _timesCompleted++;
+                Console.WriteLine($"Congratulations! You earned {_points} points!");
+		if (_timesCompleted == _timesToComplete)
+			Console.WriteLine(
+				$"Goal completed {_timesToComplete} times. Bonus: {_bonus} points.");
+        }
+
+	public override int GetPointsEarned(){
+		if (_timesCompleted != _timesToComplete)
+			return _points;
+		return _bonus + _points;
+	}
+
+	public override void SetCheckBox(){
+		_checkbox = $"[{_timesCompleted}/{_timesToComplete}]";
+	}
+
+	public void SetTimesCompleted(int timesCompleted){
+		_timesCompleted = timesCompleted;
+	}
+	
+	public int GetTimesCompleted(){
+		return _timesCompleted;
+	}
+
+	public void SetTimesToComplete(int timesToComplete){
+		_timesToComplete = timesToComplete;
+	}
+
+	public int GetTimesToComplete(){
+		return _timesToComplete;
+	}
+
+        public string GetDetailsString(){
+                return $"{_checkbox} {_name}: {_description}";
+        }
+}
+public class EternalGoal : Goal{
+        public EternalGoal(string name, string description, int points){
+                _name = name;
+                _description = description;
+                _points = points;
+                _isComplete = false;
+        }
+
+        public override void Accomplish(){
+                Console.WriteLine($"Congratulations! You earned {_points} points!");
+        }
+
+	public override int GetPointsEarned(){
+		return _points;
+	}
+
+	public override void SetCheckBox(){
+		_checkBox = "[ETERNAL]";
+	}
+}
+public abstract class Goal{
+	protected string _name, _description, _checkBox;
+	protected bool _isComplete;
+	protected int _points;
+
+	public abstract void Accomplish();
+	public abstract void SetCheckBox();
+	public abstract int GetPointsEarned();
+
+	public Goal(string name, string description, string checkbox, bool isComplete){
+		_name = name;
+		_description = description;
+	}
+
+	public void SetIsComplete(){
+		_isComplete = true;
+	}
+
+	public string GetCheckBox(){
+		return _checkBox;
+	}
+
+	public string GetDetailsString(){
+		return $"{_name}, {_points} points: {_description}";
+	}
+
+	public string GetStringRepresentation(){
+		return $"{_name},{_description},{_longDescription},{_checkBox}";
+	}
+}
+public class GoalManager{
+	private int _pointGoal, _points;
+	private List<Goal> _goals = new List<Goal>();
+
+	public GoalManager(int points, int goal){
+		_points = points;
+		_pointGoal = goal;
+	}
+
+	public void AddPoints(int points){
+		_points += points;
+	}
+
+	public void SetPointGoal(int points){
+		_pointGoal += points;
+	}
+
+	public int GetPoints(){
+		return	_points;
+	}
+
+	public int GetPointGoal(){
+		return _pointGoal;
+	}
+
+	public void AddGoal(Goal goal){
+		_goals.Add(goal);
+	}
+
+	public void GetGoals(){
+		return _goals;
+	}
+
+	public void ShowGoals(){
+		for (int i = 0; i < _goals.Count; i++)
+			Console.Writeline($"{i}: {g.GetDetailsString()}");
+	}
+
+	public void ShowGoal(int i){
+		_goals[i].Show();
+	}
+
+	public string GetProgress(){
+		return $"Current points: {_points} out of {_pointGoal} goal.";
+	}
+
+	public void Accomplish(int i){
+		goals[i].Accomplish();
+		_points += goals[i].GetPointsEarned();
+	}
+}
+using System;
+
+class Program{
+	static void Main(string[] args){
+		PointManager manager = new PointManager(0, 0);
+		Console.WriteLine("Welcome to your goal tracker!");
+		Console.WriteLine($"Points so far: {manager.GetPoints()}");
+		Console.WriteLine($"Goal: {manager.GetPointGoal()}");
+		bool go = true;
+		while (go){
+			Console.WriteLine("Select from the following options:");
+			Console.WriteLine("0. Indicate goal completion");
+			Console.WriteLine("1. Set new point objective");
+			Console.WriteLine("2. Create new goal");
+			Console.WriteLine("3. See current goals");
+			Console.WriteLine("4. Load goals");
+			Console.WriteLine("5. Save goals");
+			Console.WriteLine("6. Quit");
+			int option = int.Parse(Console.ReadLine());
+			switch (option){
+				case 0:
+					Console.WriteLine("What did you accomplish? ");
+					manager.ShowGoals();
+					manager.Accomplish(int.Parse(Console.ReadLine()));
+					break;
+				case 1:
+					Console.WriteLine("How many points? ");
+					manager.SetPointGoal(Console.ReadLine());
+					Console.WriteLine(manager.GetProgress());
+					break;
+				case 2:
+					Console.WriteLine("What kind of goal? ");
+					Console.WriteLine("1. Simple");
+					Console.WriteLine("2. Eternal");
+					Console.WriteLine("3. Checklist");
+					int choice = int.Parse(Console.ReadLine());
+					Console.WriteLine("Goal name: ");
+					string name = Console.ReadLine();
+					Console.WriteLine("Brief description: ");
+					string description = Console.ReadLine();
+					Console.WriteLine("Number of points: ");
+					int points = int.Parse(Console.ReadLine());
+					switch (choice){
+						case 1:
+							manager.AddGoal(
+								new SimpleGoal(name, description, points));
+							Console.WriteLine($"Added: {
+								manager.ShowGoal(manager.Count - 1)}");
+							break;
+						case 2:
+							manager.AddGoal(new EternalGoal(
+								name, description, points));
+							Console.WriteLine($"Added: {
+								manager.ShowGoal(manager.Count - 1)}");
+							break;
+						case 3:
+							Console.WriteLine("Times to complete: ");
+							times_to_complete = int.Parse(Console.ReadLine());
+							Console.WriteLine("Bonus upon completion: ");
+							bonus = int.Parse(Console.ReadLine());
+							manager.AddGoal(new ChecklistGoal(
+								name, description, times_to_complete,
+								points, bonus));
+							Console.WriteLine($"Added: {
+								manager.ShowGoal(manager.Count - 1)}");
+							break;
+						default:
+							Console.WriteLine("Invalid option.");
+							break;
+					}
+					break;
+				case 3:
+					manager.ShowGoals();
+					break;
+				case 4:
+					break;
+				case 5:
+					break;
+				case 6:
+					go = false;
+					break;
+			}
+		}
+	}
+}
+public class SimpleGoal : Goal{
+	public override void SetCheckBox(){
+		if (_isComplete)
+			_checkBox = "[x]";
+		else
+			_checkBox = "[ ]";
+	}
+
+	public override void Accomplish(){
+		SetIsComplete();
+		Console.WriteLine($"Congratulations! You earned {_points} points!");
+	}
+
+	public override int GetPointsEarned(){
+		return _points;
+	}
+
+        public SimpleGoal(string name, string description, int points){
+                _name = name;
+                _description = description;
+                _points = points;
+		_isComplete = false;
+		_checkBox = SetCheckBox();
+	}
+
+}
+public class ChecklistGoal : Goal{
+	private int _timesCompleted, _timesToComplete, _bonus;
+
+        public override void Accomplish(){
+                _timesCompleted++;
+                Console.WriteLine($"Congratulations! You earned {_points} points!");
+		if (_timesCompleted == _timesToComplete)
+			Console.WriteLine(
+				$"Goal completed {_timesToComplete} times. Bonus: {_bonus} points.");
+        }
+
+	public override int GetPointsEarned(){
+		if (_timesCompleted != _timesToComplete)
+			return _points;
+		return _bonus + _points;
+	}
+
+	public override void SetCheckBox(){
+		_checkbox = $"[{_timesCompleted}/{_timesToComplete}]";
+	}
+
+	public void SetTimesCompleted(int timesCompleted){
+		_timesCompleted = timesCompleted;
+	}
+	
+	public int GetTimesCompleted(){
+		return _timesCompleted;
+	}
+
+	public void SetTimesToComplete(int timesToComplete){
+		_timesToComplete = timesToComplete;
+	}
+
+	public int GetTimesToComplete(){
+		return _timesToComplete;
+	}
+}
+public class EternalGoal : Goal{
+        public EternalGoal(string name, string description, int points){
+                _name = name;
+                _description = description;
+                _points = points;
+                _isComplete = false;
+        }
+
+        public override void Accomplish(){
+                Console.WriteLine($"Congratulations! You earned {_points} points!");
+        }
+
+	public override int GetPointsEarned(){
+		return _points;
+	}
+
+	public override void SetCheckBox(){
+		_checkBox = "[ETERNAL]";
+	}
+}
+public abstract class Goal{
+	protected string _name, _description, _checkBox;
+	protected bool _isComplete;
+	protected int _points;
+
+	public abstract void Accomplish();
+	public abstract void SetCheckBox();
+	public abstract int GetPointsEarned();
+
+	public Goal(string name, string description, string checkbox, bool isComplete){
+		_name = name;
+		_description = description;
+	}
+
+	public void SetIsComplete(){
+		_isComplete = true;
+	}
+
+	public string GetCheckBox(){
+		return _checkBox;
+	}
+
+	public string GetDetailsString(){
+		return $"{_checkBox} {_name}, {_points} points: {_description}";
+	}
+
+	public string GetStringRepresentation(){
+		return $"{_name},{_description},{_longDescription},{_checkBox}";
+	}
+}
+public class GoalManager{
+	private int _pointGoal, _points;
+	private List<Goal> _goals = new List<Goal>();
+
+	public GoalManager(int points, int goal){
+		_points = points;
+		_pointGoal = goal;
+	}
+
+	public void AddPoints(int points){
+		_points += points;
+	}
+
+	public void SetPointGoal(int points){
+		_pointGoal += points;
+	}
+
+	public int GetPoints(){
+		return	_points;
+	}
+
+	public int GetPointGoal(){
+		return _pointGoal;
+	}
+
+	public void AddGoal(Goal goal){
+		_goals.Add(goal);
+	}
+
+	public void GetGoals(){
+		return _goals;
+	}
+
+	public void ShowGoals(){
+		for (int i = 0; i < _goals.Count; i++)
+			Console.Writeline($"{i}: {g.GetDetailsString()}");
+	}
+
+	public void ShowGoal(int i){
+		_goals[i].Show();
+	}
+
+	public string GetProgress(){
+		return $"Current points: {_points} out of {_pointGoal} goal.";
+	}
+
+	public void Accomplish(int i){
+		goals[i].Accomplish();
+		_points += goals[i].GetPointsEarned();
+	}
+}
+using System;
+
+class Program{
+	static void Main(string[] args){
+		PointManager manager = new PointManager(0, 0);
+		Console.WriteLine("Welcome to your goal tracker!");
+		Console.WriteLine($"Points so far: {manager.GetPoints()}");
+		Console.WriteLine($"Goal: {manager.GetPointGoal()}");
+		bool go = true;
+		while (go){
+			Console.WriteLine("Select from the following options:");
+			Console.WriteLine("0. Indicate goal completion");
+			Console.WriteLine("1. Set new point objective");
+			Console.WriteLine("2. Create new goal");
+			Console.WriteLine("3. See current goals");
+			Console.WriteLine("4. Load goals");
+			Console.WriteLine("5. Save goals");
+			Console.WriteLine("6. Quit");
+			int option = int.Parse(Console.ReadLine());
+			switch (option){
+				case 0:
+					Console.WriteLine("What did you accomplish? ");
+					manager.ShowGoals();
+					manager.Accomplish(int.Parse(Console.ReadLine()));
+					break;
+				case 1:
+					Console.WriteLine("How many points? ");
+					manager.SetPointGoal(Console.ReadLine());
+					Console.WriteLine(manager.GetProgress());
+					break;
+				case 2:
+					Console.WriteLine("What kind of goal? ");
+					Console.WriteLine("1. Simple");
+					Console.WriteLine("2. Eternal");
+					Console.WriteLine("3. Checklist");
+					int choice = int.Parse(Console.ReadLine());
+					Console.WriteLine("Goal name: ");
+					string name = Console.ReadLine();
+					Console.WriteLine("Brief description: ");
+					string description = Console.ReadLine();
+					Console.WriteLine("Number of points: ");
+					int points = int.Parse(Console.ReadLine());
+					switch (choice){
+						case 1:
+							manager.AddGoal(
+								new SimpleGoal(name, description, points));
+							Console.WriteLine($"Added: {
+								manager.ShowGoal(manager.Count - 1)}");
+							break;
+						case 2:
+							manager.AddGoal(new EternalGoal(
+								name, description, points));
+							Console.WriteLine($"Added: {
+								manager.ShowGoal(manager.Count - 1)}");
+							break;
+						case 3:
+							Console.WriteLine("Times to complete: ");
+							times_to_complete = int.Parse(Console.ReadLine());
+							Console.WriteLine("Bonus upon completion: ");
+							bonus = int.Parse(Console.ReadLine());
+							manager.AddGoal(new ChecklistGoal(
+								name, description, times_to_complete,
+								points, bonus));
+							Console.WriteLine($"Added: {
+								manager.ShowGoal(manager.Count - 1)}");
+							break;
+						default:
+							Console.WriteLine("Invalid option.");
+							break;
+					}
+					break;
+				case 3:
+					manager.ShowGoals();
+					break;
+				case 4:
+					break;
+				case 5:
+					break;
+				case 6:
+					go = false;
+					break;
+			}
+		}
+	}
+}
+public class SimpleGoal : Goal{
+	public override void SetCheckBox(){
+		if (_isComplete)
+			_checkBox = "[x]";
+		else
+			_checkBox = "[ ]";
+	}
+
+	public override void Accomplish(){
+		SetIsComplete();
+		Console.WriteLine($"Congratulations! You earned {_points} points!");
+	}
+
+	public override int GetPointsEarned(){
+		return _points;
+	}
+
+        public SimpleGoal(string name, string description, int points){
+                _name = name;
+                _description = description;
+                _points = points;
+		_isComplete = false;
+		_checkBox = SetCheckBox();
+	}
+
+}
+public class ChecklistGoal : Goal{
+	private int _timesCompleted, _timesToComplete, _bonus;
+
+	public ChecklistGoal(string name, string description, int points, int timesToComplete, int bonus) :
+			base(name, description, "[0/0]", false){
+		_name = name;
+		_description = description;
+		_points = points;
+		_timesToComplete = timesToComplete;
+		_bonus = bonus;
+		_timesCompleted = 0;
+		SetCheckBox();
+	}
+
+        public override void Accomplish(){
+                _timesCompleted++;
+                Console.WriteLine($"Congratulations! You earned {_points} points!");
+		if (_timesCompleted == _timesToComplete)
+			Console.WriteLine(
+				$"Goal completed {_timesToComplete} times. Bonus: {_bonus} points.");
+        }
+
+	public override int GetPointsEarned(){
+		if (_timesCompleted != _timesToComplete)
+			return _points;
+		return _bonus + _points;
+	}
+
+	public override void SetCheckBox(){
+		_checkBox = $"[{_timesCompleted}/{_timesToComplete}]";
+	}
+
+	public void SetTimesCompleted(int timesCompleted){
+		_timesCompleted = timesCompleted;
+	}
+	
+	public int GetTimesCompleted(){
+		return _timesCompleted;
+	}
+
+	public void SetTimesToComplete(int timesToComplete){
+		_timesToComplete = timesToComplete;
+	}
+
+	public int GetTimesToComplete(){
+		return _timesToComplete;
+	}
+}
+public class EternalGoal : Goal{
+        public EternalGoal(string name, string description, int points) : base(
+			name, description, "", false){
+                _name = name;
+                _description = description;
+                _points = points;
+                _isComplete = false;
+        }
+
+        public override void Accomplish(){
+                Console.WriteLine($"Congratulations! You earned {_points} points!");
+        }
+
+	public override int GetPointsEarned(){
+		return _points;
+	}
+
+	public override void SetCheckBox(){
+		_checkBox = "[ETERNAL]";
+	}
+}
+public abstract class Goal{
+	protected string _name, _description, _checkBox;
+	protected bool _isComplete;
+	protected int _points;
+
+	public abstract void Accomplish();
+	public abstract void SetCheckBox();
+	public abstract int GetPointsEarned();
+
+	public Goal(string name, string description, string checkbox, bool isComplete){
+		_name = name;
+		_description = description;
+	}
+
+	public void SetIsComplete(){
+		_isComplete = true;
+	}
+
+	public string GetCheckBox(){
+		return _checkBox;
+	}
+
+	public string GetDetailsString(){
+		return $"{_checkBox} {_name}, {_points} points: {_description}";
+	}
+}
+public class GoalManager{
+	private int _pointGoal, _points;
+	private List<Goal> _goals = new List<Goal>();
+
+	public GoalManager(int points, int goal){
+		_points = points;
+		_pointGoal = goal;
+	}
+
+	public void AddPoints(int points){
+		_points += points;
+	}
+
+	public void SetPointGoal(int points){
+		_pointGoal += points;
+	}
+
+	public int GetPoints(){
+		return	_points;
+	}
+
+	public int GetPointGoal(){
+		return _pointGoal;
+	}
+
+	public void AddGoal(Goal goal){
+		_goals.Add(goal);
+	}
+
+	public List<Goal> GetGoals(){
+		return _goals;
+	}
+
+	public void ShowGoals(){
+		for (int i = 0; i < _goals.Count; i++)
+			Console.WriteLine($"{i}: {_goals[i].GetDetailsString()}");
+	}
+
+	public string ShowGoal(int i){
+		_goals[i].GetDetailsString();
+	}
+
+	public string GetProgress(){
+		return $"Current points: {_points} out of {_pointGoal} goal.";
+	}
+
+	public void Accomplish(int i){
+		_goals[i].Accomplish();
+		_points += _goals[i].GetPointsEarned();
+	}
+}
+using System;
+
+class Program{
+	static void Main(string[] args){
+		GoalManager manager = new GoalManager(0, 0);
+		Console.WriteLine("Welcome to your goal tracker!");
+		Console.WriteLine($"Points so far: {manager.GetPoints()}");
+		Console.WriteLine($"Goal: {manager.GetPointGoal()}");
+		bool go = true;
+		while (go){
+			Console.WriteLine("Select from the following options:");
+			Console.WriteLine("0. Indicate goal completion");
+			Console.WriteLine("1. Set new point objective");
+			Console.WriteLine("2. Create new goal");
+			Console.WriteLine("3. See current goals");
+			Console.WriteLine("4. Load goals");
+			Console.WriteLine("5. Save goals");
+			Console.WriteLine("6. Quit");
+			int option = int.Parse(Console.ReadLine());
+			switch (option){
+				case 0:
+					Console.WriteLine("What did you accomplish? ");
+					manager.ShowGoals();
+					manager.Accomplish(int.Parse(Console.ReadLine()));
+					break;
+				case 1:
+					Console.WriteLine("How many points? ");
+					manager.SetPointGoal(Console.ReadLine());
+					Console.WriteLine(manager.GetProgress());
+					break;
+				case 2:
+					Console.WriteLine("What kind of goal? ");
+					Console.WriteLine("1. Simple");
+					Console.WriteLine("2. Eternal");
+					Console.WriteLine("3. Checklist");
+					int choice = int.Parse(Console.ReadLine());
+					Console.WriteLine("Goal name: ");
+					string name = Console.ReadLine();
+					Console.WriteLine("Brief description: ");
+					string description = Console.ReadLine();
+					Console.WriteLine("Number of points: ");
+					int points = int.Parse(Console.ReadLine());
+					switch (choice){
+						case 1:
+							manager.AddGoal(
+								new SimpleGoal(name, description, points));
+							Console.WriteLine($"Added: {
+								manager.ShowGoal(manager.Count - 1)}");
+							break;
+						case 2:
+							manager.AddGoal(new EternalGoal(
+								name, description, points));
+							Console.WriteLine($"Added: {
+								manager.ShowGoal(manager.Count - 1)}");
+							break;
+						case 3:
+							Console.WriteLine("Times to complete: ");
+							times_to_complete = int.Parse(Console.ReadLine());
+							Console.WriteLine("Bonus upon completion: ");
+							bonus = int.Parse(Console.ReadLine());
+							manager.AddGoal(new ChecklistGoal(
+								name, description, times_to_complete,
+								points, bonus));
+							Console.WriteLine($"Added: {
+								manager.ShowGoal(manager.Count - 1)}");
+							break;
+						default:
+							Console.WriteLine("Invalid option.");
+							break;
+					}
+					break;
+				case 3:
+					manager.ShowGoals();
+					break;
+				case 4:
+					break;
+				case 5:
+					break;
+				case 6:
+					go = false;
+					break;
+			}
+		}
+	}
+}
+public class SimpleGoal : Goal{
+	public override void SetCheckBox(){
+		if (_isComplete)
+			_checkBox = "[x]";
+		else
+			_checkBox = "[ ]";
+	}
+
+	public override void Accomplish(){
+		SetIsComplete();
+		Console.WriteLine($"Congratulations! You earned {_points} points!");
+	}
+
+	public override int GetPointsEarned(){
+		return _points;
+	}
+
+        public SimpleGoal(string name, string description, int points) : base(
+			name, description, "[ ]", false){
+                _name = name;
+                _description = description;
+                _points = points;
+		_isComplete = false;
+		SetCheckBox();
+	}
+
+}
+public class ChecklistGoal : Goal{
+	private int _timesCompleted, _timesToComplete, _bonus;
+
+	public ChecklistGoal(string name, string description, int points, int timesToComplete, int bonus) :
+			base(name, description, "[0/0]", false){
+		_name = name;
+		_description = description;
+		_points = points;
+		_timesToComplete = timesToComplete;
+		_bonus = bonus;
+		_timesCompleted = 0;
+		SetCheckBox();
+	}
+
+        public override void Accomplish(){
+                _timesCompleted++;
+                Console.WriteLine($"Congratulations! You earned {_points} points!");
+		if (_timesCompleted == _timesToComplete)
+			Console.WriteLine(
+				$"Goal completed {_timesToComplete} times. Bonus: {_bonus} points.");
+        }
+
+	public override int GetPointsEarned(){
+		if (_timesCompleted != _timesToComplete)
+			return _points;
+		return _bonus + _points;
+	}
+
+	public override void SetCheckBox(){
+		_checkBox = $"[{_timesCompleted}/{_timesToComplete}]";
+	}
+
+	public void SetTimesCompleted(int timesCompleted){
+		_timesCompleted = timesCompleted;
+	}
+	
+	public int GetTimesCompleted(){
+		return _timesCompleted;
+	}
+
+	public void SetTimesToComplete(int timesToComplete){
+		_timesToComplete = timesToComplete;
+	}
+
+	public int GetTimesToComplete(){
+		return _timesToComplete;
+	}
+}
+public class EternalGoal : Goal{
+        public EternalGoal(string name, string description, int points) : base(
+			name, description, "", false){
+                _name = name;
+                _description = description;
+                _points = points;
+                _isComplete = false;
+        }
+
+        public override void Accomplish(){
+                Console.WriteLine($"Congratulations! You earned {_points} points!");
+        }
+
+	public override int GetPointsEarned(){
+		return _points;
+	}
+
+	public override void SetCheckBox(){
+		_checkBox = "[ETERNAL]";
+	}
+}
+public abstract class Goal{
+	protected string _name, _description, _checkBox;
+	protected bool _isComplete;
+	protected int _points;
+
+	public abstract void Accomplish();
+	public abstract void SetCheckBox();
+	public abstract int GetPointsEarned();
+
+	public Goal(string name, string description, string checkbox, bool isComplete){
+		_name = name;
+		_description = description;
+	}
+
+	public void SetIsComplete(){
+		_isComplete = true;
+	}
+
+	public string GetCheckBox(){
+		return _checkBox;
+	}
+
+	public string GetDetailsString(){
+		return $"{_checkBox} {_name}, {_points} points: {_description}";
+	}
+}
+public class GoalManager{
+	private int _pointGoal, _points;
+	private List<Goal> _goals = new List<Goal>();
+
+	public GoalManager(int points, int goal){
+		_points = points;
+		_pointGoal = goal;
+	}
+
+	public void AddPoints(int points){
+		_points += points;
+	}
+
+	public void SetPointGoal(int points){
+		_pointGoal += points;
+	}
+
+	public int GetPoints(){
+		return	_points;
+	}
+
+	public int GetPointGoal(){
+		return _pointGoal;
+	}
+
+	public void AddGoal(Goal goal){
+		_goals.Add(goal);
+	}
+
+	public List<Goal> GetGoals(){
+		return _goals;
+	}
+
+	public void ShowGoals(){
+		for (int i = 0; i < _goals.Count; i++)
+			Console.WriteLine($"{i}: {_goals[i].GetDetailsString()}");
+	}
+
+	public string ShowGoal(int i){
+		return _goals[i].GetDetailsString();
+	}
+
+	public string GetProgress(){
+		return $"Current points: {_points} out of {_pointGoal} goal.";
+	}
+
+	public void Accomplish(int i){
+		_goals[i].Accomplish();
+		_points += _goals[i].GetPointsEarned();
+	}
+}
+using System;
+
+class Program{
+	static void Main(string[] args){
+		GoalManager manager = new GoalManager(0, 0);
+		Console.WriteLine("Welcome to your goal tracker!");
+		Console.WriteLine($"Points so far: {manager.GetPoints()}");
+		Console.WriteLine($"Goal: {manager.GetPointGoal()}");
+		bool go = true;
+		while (go){
+			Console.WriteLine("Select from the following options:");
+			Console.WriteLine("0. Indicate goal completion");
+			Console.WriteLine("1. Set new point objective");
+			Console.WriteLine("2. Create new goal");
+			Console.WriteLine("3. See current goals");
+			Console.WriteLine("4. Load goals");
+			Console.WriteLine("5. Save goals");
+			Console.WriteLine("6. Quit");
+			int option = int.Parse(Console.ReadLine());
+			switch (option){
+				case 0:
+					Console.WriteLine("What did you accomplish? ");
+					manager.ShowGoals();
+					manager.Accomplish(int.Parse(Console.ReadLine()));
+					break;
+				case 1:
+					Console.WriteLine("How many points? ");
+					manager.SetPointGoal(int.Parse(Console.ReadLine()));
+					Console.WriteLine(manager.GetProgress());
+					break;
+				case 2:
+					Console.WriteLine("What kind of goal? ");
+					Console.WriteLine("1. Simple");
+					Console.WriteLine("2. Eternal");
+					Console.WriteLine("3. Checklist");
+					int choice = int.Parse(Console.ReadLine());
+					Console.WriteLine("Goal name: ");
+					string name = Console.ReadLine();
+					Console.WriteLine("Brief description: ");
+					string description = Console.ReadLine();
+					Console.WriteLine("Number of points: ");
+					int points = int.Parse(Console.ReadLine());
+					switch (choice){
+						case 1:
+							manager.AddGoal(
+								new SimpleGoal(name, description, points));
+							Console.WriteLine($"Added: {
+								manager.ShowGoal(manager.Count - 1)}");
+							break;
+						case 2:
+							manager.AddGoal(new EternalGoal(
+								name, description, points));
+							Console.WriteLine($"Added: {
+								manager.ShowGoal(manager.Count - 1)}");
+							break;
+						case 3:
+							Console.WriteLine("Times to complete: ");
+							timesToComplete = int.Parse(Console.ReadLine());
+							Console.WriteLine("Bonus upon completion: ");
+							int bonus = int.Parse(Console.ReadLine());
+							manager.AddGoal(new ChecklistGoal(
+								name, description, timesToComplete,
+								points, bonus));
+							Console.WriteLine($"Added: {
+								manager.ShowGoal(manager.Count - 1)}");
+							break;
+						default:
+							Console.WriteLine("Invalid option.");
+							break;
+					}
+					break;
+				case 3:
+					manager.ShowGoals();
+					break;
+				case 4:
+					break;
+				case 5:
+					break;
+				case 6:
+					go = false;
+					break;
+			}
+		}
+	}
+}
+public class SimpleGoal : Goal{
+	public override void SetCheckBox(){
+		if (_isComplete)
+			_checkBox = "[x]";
+		else
+			_checkBox = "[ ]";
+	}
+
+	public override void Accomplish(){
+		SetIsComplete();
+		Console.WriteLine($"Congratulations! You earned {_points} points!");
+	}
+
+	public override int GetPointsEarned(){
+		return _points;
+	}
+
+        public SimpleGoal(string name, string description, int points) : base(
+			name, description, "[ ]", false){
+                _name = name;
+                _description = description;
+                _points = points;
+		_isComplete = false;
+		SetCheckBox();
+	}
+
+}
+public class ChecklistGoal : Goal{
+	private int _timesCompleted, _timesToComplete, _bonus;
+
+	public ChecklistGoal(string name, string description, int points, int timesToComplete, int bonus) :
+			base(name, description, "[0/0]", false){
+		_name = name;
+		_description = description;
+		_points = points;
+		_timesToComplete = timesToComplete;
+		_bonus = bonus;
+		_timesCompleted = 0;
+		SetCheckBox();
+	}
+
+        public override void Accomplish(){
+                _timesCompleted++;
+		SetCheckBox();
+                Console.WriteLine($"Congratulations! You earned {_points} points!");
+		if (_timesCompleted == _timesToComplete)
+			Console.WriteLine(
+				$"Goal completed {_timesToComplete} times. Bonus: {_bonus} points.");
+        }
+
+	public override int GetPointsEarned(){
+		if (_timesCompleted != _timesToComplete)
+			return _points;
+		return _bonus + _points;
+	}
+
+	public override void SetCheckBox(){
+		_checkBox = $"[{_timesCompleted}/{_timesToComplete}]";
+	}
+
+	public void SetTimesCompleted(int timesCompleted){
+		_timesCompleted = timesCompleted;
+	}
+	
+	public int GetTimesCompleted(){
+		return _timesCompleted;
+	}
+
+	public void SetTimesToComplete(int timesToComplete){
+		_timesToComplete = timesToComplete;
+	}
+
+	public int GetTimesToComplete(){
+		return _timesToComplete;
+	}
+}
+public class EternalGoal : Goal{
+        public EternalGoal(string name, string description, int points) : base(
+			name, description, "", false){
+                _name = name;
+                _description = description;
+                _points = points;
+                _isComplete = false;
+        }
+
+        public override void Accomplish(){
+		SetCheckBox();
+                Console.WriteLine($"Congratulations! You earned {_points} points!");
+        }
+
+	public override int GetPointsEarned(){
+		return _points;
+	}
+
+	public override void SetCheckBox(){
+		_checkBox = "[ETERNAL]";
+	}
+}
+public abstract class Goal{
+	protected string _name, _description, _checkBox;
+	protected bool _isComplete;
+	protected int _points;
+
+	public abstract void Accomplish();
+	public abstract void SetCheckBox();
+	public abstract int GetPointsEarned();
+
+	public Goal(string name, string description, string checkbox, bool isComplete){
+		_name = name;
+		_description = description;
+	}
+
+	public void SetIsComplete(){
+		_isComplete = true;
+	}
+
+	public string GetCheckBox(){
+		return _checkBox;
+	}
+
+	public string GetDetailsString(){
+		return $"{_checkBox} {_name}, {_points} points: {_description}";
+	}
+}
+public class GoalManager{
+	private int _pointGoal, _points;
+	private List<Goal> _goals = new List<Goal>();
+
+	public GoalManager(int points, int goal){
+		_points = points;
+		_pointGoal = goal;
+	}
+
+	public void AddPoints(int points){
+		_points += points;
+	}
+
+	public void SetPointGoal(int points){
+		_pointGoal += points;
+	}
+
+	public int GetPoints(){
+		return	_points;
+	}
+
+	public int GetPointGoal(){
+		return _pointGoal;
+	}
+
+	public void AddGoal(Goal goal){
+		_goals.Add(goal);
+	}
+
+	public List<Goal> GetGoals(){
+		return _goals;
+	}
+
+	public void ShowGoals(){
+		Console.WriteLine($"\n{GetProgress()}\n");
+		for (int i = 0; i < _goals.Count; i++)
+			Console.WriteLine($"{i}: {_goals[i].GetDetailsString()}");
+	}
+
+	public string ShowGoal(int i){
+		return _goals[i].GetDetailsString();
+	}
+
+	public string GetProgress(){
+		return $"Current points: {_points} out of {_pointGoal} (goal).";
+	}
+
+	public void Accomplish(int i){
+		_goals[i].Accomplish();
+		_points += _goals[i].GetPointsEarned();
+	}
+}
+using System;
+
+class Program{
+	static void Main(string[] args){
+		GoalManager manager = new GoalManager(0, 0);
+		Console.WriteLine("Welcome to your goal tracker!");
+		Console.WriteLine($"Points so far: {manager.GetPoints()}");
+		Console.WriteLine($"Goal: {manager.GetPointGoal()}");
+		bool go = true;
+		while (go){
+			Console.WriteLine("\nSelect from the following options:");
+			Console.WriteLine("0. Indicate goal completion");
+			Console.WriteLine("1. Set new point objective");
+			Console.WriteLine("2. Create new goal");
+			Console.WriteLine("3. See current goals");
+			Console.WriteLine("4. Load goals");
+			Console.WriteLine("5. Save goals");
+			Console.WriteLine("6. Quit");
+			int option = int.Parse(Console.ReadLine());
+			switch (option){
+				case 0:
+					Console.WriteLine("What goal (number) did you accomplish? ");
+					manager.ShowGoals();
+					manager.Accomplish(int.Parse(Console.ReadLine()));
+					break;
+				case 1:
+					Console.WriteLine("How many points? ");
+					manager.SetPointGoal(int.Parse(Console.ReadLine()));
+					Console.WriteLine(manager.GetProgress());
+					break;
+				case 2:
+					Console.WriteLine("What kind of goal? ");
+					Console.WriteLine("1. Simple");
+					Console.WriteLine("2. Eternal");
+					Console.WriteLine("3. Checklist");
+					int choice = int.Parse(Console.ReadLine());
+					Console.WriteLine("Goal name: ");
+					string name = Console.ReadLine();
+					Console.WriteLine("Brief description: ");
+					string description = Console.ReadLine();
+					Console.WriteLine("Number of points: ");
+					int points = int.Parse(Console.ReadLine());
+					switch (choice){
+						case 1:
+							manager.AddGoal(
+								new SimpleGoal(name, description, points));
+							Console.WriteLine($"Added: {
+								manager.ShowGoal(
+									manager.GetGoals().Count - 1)}");
+							break;
+						case 2:
+							manager.AddGoal(new EternalGoal(
+								name, description, points));
+							Console.WriteLine($"Added: {
+								manager.ShowGoal(
+									manager.GetGoals().Count - 1)}");
+							break;
+						case 3:
+							Console.WriteLine("Times to complete: ");
+							int timesToComplete = int.Parse(Console.ReadLine());
+							Console.WriteLine("Bonus upon completion: ");
+							int bonus = int.Parse(Console.ReadLine());
+							manager.AddGoal(new ChecklistGoal(
+								name, description, timesToComplete,
+								points, bonus));
+							Console.WriteLine($"Added: {
+								manager.ShowGoal(
+									manager.GetGoals().Count - 1)}");
+							break;
+						default:
+							Console.WriteLine("Invalid option.");
+							break;
+					}
+					break;
+				case 3:
+					manager.ShowGoals();
+					break;
+				case 4:
+					break;
+				case 5:
+					break;
+				case 6:
+					go = false;
+					break;
+			}
+		}
+	}
+}
+public class SimpleGoal : Goal{
+	public override void SetCheckBox(){
+		if (_isComplete)
+			_checkBox = "[x]";
+		else
+			_checkBox = "[ ]";
+	}
+
+	public override void Accomplish(){
+		SetIsComplete();
+		SetCheckBox();
+		Console.WriteLine($"Congratulations! You earned {_points} points!");
+	}
+
+	public override int GetPointsEarned(){
+		return _points;
+	}
+
+        public SimpleGoal(string name, string description, int points) : base(
+			name, description, "[ ]", false){
+                _name = name;
+                _description = description;
+                _points = points;
+		_isComplete = false;
+		SetCheckBox();
+	}
+
+}
